@@ -1,8 +1,8 @@
-package service;
+package com.yandex.tracker.service;
 
-import model.Epic;
-import model.Subtask;
-import model.Task;
+import com.yandex.tracker.model.Epic;
+import com.yandex.tracker.model.Subtask;
+import com.yandex.tracker.model.Task;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +22,7 @@ public class TaskManager {
     }
 
     public Subtask createSubtask(Subtask subtask) {
-     final int id = tasksId++;
+        final int id = tasksId++;
         subtask.setId(id);
         subtasks.put(id, subtask);
         Epic epic = epics.get(subtask.getEpicId());
@@ -41,6 +41,7 @@ public class TaskManager {
     }
 
     public void updateTask(Task newTask) {
+
         tasks.put(newTask.getId(), newTask);
     }
 
@@ -49,33 +50,52 @@ public class TaskManager {
         if (epic == null) {
             return;
         }
-        subtasks.put(newSubtask.getId(), newSubtask);
+      epic.updateStatus();
+        subtasks.put(newSubtask.getId(),newSubtask);
         epic.updateStatus();
     }
 
     public void updateEpic(Epic newEpic) {
         epics.put(newEpic.getId(), newEpic);
-        newEpic.updateStatus();
     }
 
-    public void deletedTasks() {
-        tasks.clear();
+    public void deletedTask(int id) {
+
+        tasks.remove(id);
     }
 
-    public void deletedSubtasks() {
-        subtasks.clear();
+    public void deletedSubtask(int id) {
+        Subtask subtask = subtasks.remove(id);
+        if (subtask != null) {
+            Epic epic = epics.get(subtask.getEpicId());
+            if ((epic != null)) {
+                epic.getSubtask().remove(subtask);
+                epic.updateStatus();
+            }
+        }
     }
 
-    public void deletedEpics() {
-        for (Epic epic : epics.values()){
-            for (Subtask subtask : epic.getSubtask()){
+    public void deletedEpic(int id) {
+        for (Epic epic : epics.values()) {
+            for (Subtask subtask : epic.getSubtask()) {
                 subtasks.remove(subtask.getId());
             }
         }
-        epics.clear();
+        epics.remove(id);
     }
 
-    public List<Task> getAllTasks(){
+    public void deletedAllTasks(){
+        tasks.clear();
+    }
+
+    public void deletedAllSubtasks(){
+        subtasks.clear();
+    }
+
+    public void deletedAllEpic(){
+        epics.clear();
+    }
+    public List<Task> getAllTasks() {
         return new ArrayList<>(this.tasks.values());
     }
 
