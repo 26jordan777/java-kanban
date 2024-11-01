@@ -1,3 +1,4 @@
+package com.yandex.tracker.model;
 
 public class Task {
 
@@ -16,6 +17,10 @@ public class Task {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -50,6 +55,7 @@ public class Task {
     public int hashCode() {
         return Integer.hashCode(id);
     }
+
 
 
 }

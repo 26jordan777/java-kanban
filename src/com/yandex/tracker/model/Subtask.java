@@ -1,3 +1,4 @@
+package com.yandex.tracker.model;
 
 public class Subtask extends Task {
 
