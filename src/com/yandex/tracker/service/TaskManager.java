@@ -4,6 +4,7 @@ import com.yandex.tracker.model.Epic;
 import com.yandex.tracker.model.Subtask;
 import com.yandex.tracker.model.Task;
 
+import java.awt.image.SinglePixelPackedSampleModel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class TaskManager {
         final int id = tasksId++;
         subtask.setId(id);
         subtasks.put(id, subtask);
+
         Epic epic = epics.get(subtask.getEpicId());
         if (epic != null) {
             epic.addSubtask(subtask);
@@ -41,7 +43,6 @@ public class TaskManager {
     }
 
     public void updateTask(Task newTask) {
-
         tasks.put(newTask.getId(), newTask);
     }
 
@@ -50,8 +51,10 @@ public class TaskManager {
         if (epic == null) {
             return;
         }
-      epic.updateStatus();
-        subtasks.put(newSubtask.getId(),newSubtask);
+        subtasks.put(newSubtask.getId(), newSubtask);
+        epic.getSubtask().removeIf(subtask -> subtask.getId() == newSubtask.getId());
+        subtasks.put(newSubtask.getId(), newSubtask);
+        epic.addSubtask(newSubtask);
         epic.updateStatus();
     }
 
@@ -60,7 +63,6 @@ public class TaskManager {
     }
 
     public void deletedTask(int id) {
-
         tasks.remove(id);
     }
 
@@ -84,17 +86,29 @@ public class TaskManager {
         epics.remove(id);
     }
 
-    public void deletedAllTasks(){
+    public void deletedAllTasks() {
         tasks.clear();
     }
 
-    public void deletedAllSubtasks(){
+    public void deletedAllSubtasks() {
+        for (Epic epic : epics.values()){
+            for (Subtask subtask : epic.getSubtask()){
+                subtasks.remove(subtask.getId());
+            }
+            epic.getSubtask().clear();
+        }
         subtasks.clear();
     }
 
-    public void deletedAllEpic(){
+    public void deletedAllEpics() {
+        for (Epic epic : epics.values()){
+            for (Subtask subtask : epic.getSubtask()){
+                subtasks.remove(subtask.getId());
+            }
+        }
         epics.clear();
     }
+
     public List<Task> getAllTasks() {
         return new ArrayList<>(this.tasks.values());
     }
@@ -107,6 +121,23 @@ public class TaskManager {
 
     public List<Epic> getAllEpics() {
         return new ArrayList<>(this.epics.values());
+    }
+
+public List<Subtask> getEpicSubtasks(int epicId){
+        Epic epic = epics.get(epicId);
+        return epic.getSubtask();
+}
+
+    public Task getTask(int id){
+        return  tasks.get(id);
+    }
+
+    public Subtask getSubtask(int id){
+        return subtasks.get(id);
+    }
+
+    public Epic getEpic(int id){
+        return epics.get(id);
     }
 }
 
