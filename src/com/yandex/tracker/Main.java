@@ -1,26 +1,28 @@
-import model.Epic;
-import model.Status;
-import model.Subtask;
-import model.Task;
-import service.TaskManager;
+package com.yandex.tracker;
+
+import com.yandex.tracker.model.Epic;
+import com.yandex.tracker.model.Status;
+import com.yandex.tracker.model.Subtask;
+import com.yandex.tracker.model.Task;
+import com.yandex.tracker.service.TaskManager;
 
 public class Main {
     public static void main(String[] args) {
         TaskManager taskManager = new TaskManager();
 
-        Task task1 = taskManager.createTask(new Task(0,"Найти университет", "Подать документы в приемную комиссию"));
-        Task task2 = taskManager.createTask(new Task(0,"Купить продукты", "Купить сыр, молоко и хлеб"));
+        Task task1 = taskManager.createTask(new Task("Найти университет", "Подать документы в приемную комиссию"));
+        Task task2 = taskManager.createTask(new Task( "Купить продукты", "Купить сыр, молоко и хлеб"));
 
 
-        Epic epic1 = taskManager.createEpic(new Epic( "Поступление в университет", "Подготовиться к поступлению"));
+        Epic epic1 = taskManager.createEpic(new Epic("Поступление в университет", "Подготовиться к поступлению"));
 
-        Subtask subtask1 = taskManager.createSubtask(new Subtask(0,"Собрать все необходимые документы",
+        Subtask subtask1 = taskManager.createSubtask(new Subtask(0, "Собрать все необходимые документы",
                 "Собрать все документы в папку", epic1.getId()));
-        Subtask subtask2 = taskManager.createSubtask(new Subtask(0,"Проверить документы",
+        Subtask subtask2 = taskManager.createSubtask(new Subtask(0, "Проверить документы",
                 "Убедиться в их корректности", epic1.getId()));
 
         Epic epic2 = taskManager.createEpic(new Epic("Найти работу", "Начать поиск новой работы"));
-        Subtask subtask3 = taskManager.createSubtask(new Subtask(0,"Обновить резюме", "Добавить новую информацию " +
+        Subtask subtask3 = taskManager.createSubtask(new Subtask(0, "Обновить резюме", "Добавить новую информацию " +
                 "в резюме", epic2.getId()));
 
         System.out.println();
@@ -59,8 +61,8 @@ public class Main {
         System.out.println("Эпик 2 " + epic2.getName() + " Статус :" + epic2.getStatus());
 
 
-        taskManager.deletedTasks(task2.getId());
-        taskManager.deletedEpics(epic2.getId());
+        taskManager.deletedTask(task2.getId());
+        taskManager.deletedEpic(epic2.getId());
 
         System.out.println();
         System.out.println("После удаления задачи и эпика:");
@@ -68,6 +70,14 @@ public class Main {
         for (Epic epic : taskManager.getAllEpics()) {
             epic.updateStatus();
             System.out.println(epic.getName() + " Статус: " + epic.getStatus());
+
         }
+        System.out.println();
+        System.out.println("Удаление всех задач");
+        taskManager.deletedAllEpics();
+        taskManager.deletedAllSubtasks();
+        taskManager.deletedAllTasks();
+
+        System.out.println("Список задач пуст.");
     }
 }
