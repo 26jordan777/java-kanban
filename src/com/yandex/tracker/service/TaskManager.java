@@ -4,12 +4,11 @@ import com.yandex.tracker.model.Epic;
 import com.yandex.tracker.model.Subtask;
 import com.yandex.tracker.model.Task;
 
-import java.awt.image.SinglePixelPackedSampleModel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
-public class TaskManager {
+public class TaskManager{
     private HashMap<Integer, Task> tasks = new HashMap<>();
     private HashMap<Integer, Subtask> subtasks = new HashMap<>();
     private HashMap<Integer, Epic> epics = new HashMap<>();
@@ -92,20 +91,13 @@ public class TaskManager {
 
     public void deletedAllSubtasks() {
         for (Epic epic : epics.values()){
-            for (Subtask subtask : epic.getSubtask()){
-                subtasks.remove(subtask.getId());
-            }
             epic.getSubtask().clear();
         }
         subtasks.clear();
     }
 
     public void deletedAllEpics() {
-        for (Epic epic : epics.values()){
-            for (Subtask subtask : epic.getSubtask()){
-                subtasks.remove(subtask.getId());
-            }
-        }
+      subtasks.clear();
         epics.clear();
     }
 

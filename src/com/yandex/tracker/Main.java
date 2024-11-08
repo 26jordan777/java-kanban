@@ -1,17 +1,18 @@
 package com.yandex.tracker;
 
 import com.yandex.tracker.model.Epic;
-import com.yandex.tracker.model.Status;
 import com.yandex.tracker.model.Subtask;
 import com.yandex.tracker.model.Task;
+import com.yandex.tracker.service.Managers;
 import com.yandex.tracker.service.TaskManager;
+
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = Managers.getDefault();
 
         Task task1 = taskManager.createTask(new Task("Найти университет", "Подать документы в приемную комиссию"));
-        Task task2 = taskManager.createTask(new Task( "Купить продукты", "Купить сыр, молоко и хлеб"));
+        Task task2 = taskManager.createTask(new Task("Купить продукты", "Купить сыр, молоко и хлеб"));
 
 
         Epic epic1 = taskManager.createEpic(new Epic("Поступление в университет", "Подготовиться к поступлению"));
@@ -25,59 +26,40 @@ public class Main {
         Subtask subtask3 = taskManager.createSubtask(new Subtask(0, "Обновить резюме", "Добавить новую информацию " +
                 "в резюме", epic2.getId()));
 
-        System.out.println();
-        System.out.println("Все задачи:");
-        for (Task task : taskManager.getAllTasks()) {
-            System.out.println(task.getName() + " Статус: " + task.getStatus());
+
+        taskManager.getTask(task1.getId());
+        System.out.println("История после получения задачи 1: " + taskManager.getHistory());
+        taskManager.getSubtask(subtask1.getId());
+
+        System.out.println("История после получения подзадачи 1: " + taskManager.getHistory());
+        taskManager.getEpic(epic1.getId());
+        System.out.println("История после получения эпика 1: " + taskManager.getHistory());
+
+        printAllTasks(taskManager);
+    }
+
+
+    private static void printAllTasks(TaskManager manager) {
+        System.out.println("Задачи:");
+        for (Task task : manager.getAllTasks()) {
+            System.out.println(task);
+        }
+        System.out.println("Эпики:");
+        for (Task epic : manager.getAllEpics()) {
+            System.out.println(epic);
+
+            for (Task task : manager.getAllSubtasks()) {
+                System.out.println("--> " + task);
+            }
+        }
+        System.out.println("Подзадачи:");
+        for (Task subtask : manager.getAllSubtasks()) {
+            System.out.println(subtask);
         }
 
-        System.out.println();
-        System.out.println("Все подзадачи:");
-        for (Subtask subtask : taskManager.getAllSubtasks()) {
-            System.out.println(subtask.getName() + " Эпик ID: " + subtask.getEpicId() +
-                    " Статус: " + subtask.getStatus());
+        System.out.println("История:");
+        for (Task task : manager.getHistory()) {
+            System.out.println(task);
         }
-        System.out.println();
-        System.out.println("Все эпики:");
-        for (Epic epic : taskManager.getAllEpics()) {
-            System.out.println(epic.getName() + " Статус: " + epic.getStatus());
-        }
-
-
-        task1.setStatus(Status.IN_PROGRESS);
-        taskManager.updateTask(task1);
-        subtask1.setStatus(Status.DONE);
-        taskManager.updateSubtask(subtask1);
-
-        System.out.println();
-        System.out.println("Статус после изменений: ");
-        System.out.println("Задача 1 " + task1.getName() + " Статус - " + task1.getStatus());
-        System.out.println("Задача 2 " + task2.getName() + " Статус - " + task2.getStatus());
-
-        epic1.updateStatus();
-        epic2.updateStatus();
-
-        System.out.println("Эпик 1 " + epic1.getName() + " Статус :" + epic1.getStatus());
-        System.out.println("Эпик 2 " + epic2.getName() + " Статус :" + epic2.getStatus());
-
-
-        taskManager.deletedTask(task2.getId());
-        taskManager.deletedEpic(epic2.getId());
-
-        System.out.println();
-        System.out.println("После удаления задачи и эпика:");
-        System.out.println("Оставшиеся задачи:");
-        for (Epic epic : taskManager.getAllEpics()) {
-            epic.updateStatus();
-            System.out.println(epic.getName() + " Статус: " + epic.getStatus());
-
-        }
-        System.out.println();
-        System.out.println("Удаление всех задач");
-        taskManager.deletedAllEpics();
-        taskManager.deletedAllSubtasks();
-        taskManager.deletedAllTasks();
-
-        System.out.println("Список задач пуст.");
     }
 }
