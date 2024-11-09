@@ -4,132 +4,48 @@ import com.yandex.tracker.model.Epic;
 import com.yandex.tracker.model.Subtask;
 import com.yandex.tracker.model.Task;
 
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.ArrayList;
 
-public class TaskManager{
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
-    private int tasksId = 0;
+public interface TaskManager {
+    Task createTask(Task task);
 
-    public Task createTask(Task task) {
-        final int id = tasksId++;
-        task.setId(id);
-        tasks.put(id, task);
-        return task;
-    }
+    Subtask createSubtask(Subtask subtask);
 
-    public Subtask createSubtask(Subtask subtask) {
-        final int id = tasksId++;
-        subtask.setId(id);
-        subtasks.put(id, subtask);
+    Epic createEpic(Epic epic);
 
-        Epic epic = epics.get(subtask.getEpicId());
-        if (epic != null) {
-            epic.addSubtask(subtask);
-            epic.updateStatus();
-        }
-        return subtask;
-    }
+    void updateTask(Task newTask);
 
-    public Epic createEpic(Epic epic) {
-        final int id = tasksId++;
-        epic.setId(id);
-        epics.put(id, epic);
-        return epic;
-    }
+    void updateSubtask(Subtask newSubtask);
 
-    public void updateTask(Task newTask) {
-        tasks.put(newTask.getId(), newTask);
-    }
+    void updateEpic(Epic newEpic);
 
-    public void updateSubtask(Subtask newSubtask) {
-        Epic epic = epics.get(newSubtask.getEpicId());
-        if (epic == null) {
-            return;
-        }
-        subtasks.put(newSubtask.getId(), newSubtask);
-        epic.getSubtask().removeIf(subtask -> subtask.getId() == newSubtask.getId());
-        subtasks.put(newSubtask.getId(), newSubtask);
-        epic.addSubtask(newSubtask);
-        epic.updateStatus();
-    }
+    void deletedTask(int id);
 
-    public void updateEpic(Epic newEpic) {
-        epics.put(newEpic.getId(), newEpic);
-    }
+    void deletedSubtask(int id);
 
-    public void deletedTask(int id) {
-        tasks.remove(id);
-    }
+    void deletedEpic(int id);
 
-    public void deletedSubtask(int id) {
-        Subtask subtask = subtasks.remove(id);
-        if (subtask != null) {
-            Epic epic = epics.get(subtask.getEpicId());
-            if ((epic != null)) {
-                epic.getSubtask().remove(subtask);
-                epic.updateStatus();
-            }
-        }
-    }
+    void deletedAllTasks();
 
-    public void deletedEpic(int id) {
-        for (Epic epic : epics.values()) {
-            for (Subtask subtask : epic.getSubtask()) {
-                subtasks.remove(subtask.getId());
-            }
-        }
-        epics.remove(id);
-    }
+    void deletedAllSubtasks();
 
-    public void deletedAllTasks() {
-        tasks.clear();
-    }
+    void deletedAllEpics();
 
-    public void deletedAllSubtasks() {
-        for (Epic epic : epics.values()){
-            epic.getSubtask().clear();
-        }
-        subtasks.clear();
-    }
+    List<Task> getAllTasks();
 
-    public void deletedAllEpics() {
-      subtasks.clear();
-        epics.clear();
-    }
+    List<Subtask> getAllSubtasks();
 
-    public List<Task> getAllTasks() {
-        return new ArrayList<>(this.tasks.values());
-    }
+    List<Epic> getAllEpics();
 
+    Task getTask(int id);
 
-    public List<Subtask> getAllSubtasks() {
-        return new ArrayList<>(this.subtasks.values());
-    }
+    Subtask getSubtask(int id);
 
+    Epic getEpic(int id);
 
-    public List<Epic> getAllEpics() {
-        return new ArrayList<>(this.epics.values());
-    }
+    List<Task> getHistory();
 
-public List<Subtask> getEpicSubtasks(int epicId){
-        Epic epic = epics.get(epicId);
-        return epic.getSubtask();
 }
 
-    public Task getTask(int id){
-        return  tasks.get(id);
-    }
-
-    public Subtask getSubtask(int id){
-        return subtasks.get(id);
-    }
-
-    public Epic getEpic(int id){
-        return epics.get(id);
-    }
-}
 
