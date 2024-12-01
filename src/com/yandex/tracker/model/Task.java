@@ -40,6 +40,7 @@ public class Task {
     public Status getStatus() {
         return status;
     }
+
     public void setStatus(Status status) {
         this.status = status;
     }
@@ -47,25 +48,21 @@ public class Task {
 
     @Override
     public boolean equals(Object obj) {
-       if (this == obj) return  true;
-       if (obj == null || getClass() != obj.getClass()) return  false;
-       Task task = (Task) obj;
-       return id == task.id;
-     }
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Task task = (Task) obj;
+        return id == task.id;
+    }
 
     @Override
     public int hashCode() {
         return Integer.hashCode(id);
     }
- @Override
-    public String toString(){
-        return  "Task{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
-                '}';
- }
- }
+
+    @Override
+    public String toString() {
+        return "Task{" + "id=" + id + ", name='" + name + '\'' + ", description='" + description + '\'' + ", status=" + status + '}';
+    }
+}
 
 

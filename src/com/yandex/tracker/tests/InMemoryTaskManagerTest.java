@@ -107,35 +107,35 @@ public class InMemoryTaskManagerTest {
 
     @Test
     public void testRemoveNonExistentTask() {
-    taskManager.deletedTask(999);
-    assertEquals(0, taskManager.getAllTasks().size(), "No tasks should remain");
-}
+        taskManager.deletedTask(999);
+        assertEquals(0, taskManager.getAllTasks().size(), "No tasks should remain");
+    }
 
-@Test
-public void testRemoveNonExistentSubtask() {
-    Epic epic = taskManager.createEpic(new Epic("Epic Name", "Epic Description"));
-    taskManager.deletedSubtask(999);
-    assertEquals(0, epic.getSubtask().size(), "Epic should still have no subtasks");
-}
+    @Test
+    public void testRemoveNonExistentSubtask() {
+        Epic epic = taskManager.createEpic(new Epic("Epic Name", "Epic Description"));
+        taskManager.deletedSubtask(999);
+        assertEquals(0, epic.getSubtask().size(), "Epic should still have no subtasks");
+    }
 
-@Test
-public void testTaskSetterUpdatesTask() {
-    Task task = new Task("Initial Task", "Description");
-    taskManager.createTask(task);
+    @Test
+    public void testTaskSetterUpdatesTask() {
+        Task task = new Task("Initial Task", "Description");
+        taskManager.createTask(task);
 
-    task.setDescription("New Description");
-    taskManager.updateTask(task);
+        task.setDescription("New Description");
+        taskManager.updateTask(task);
 
-    assertEquals("New Description", taskManager.getTask(task.getId()).getDescription());
-}
+        assertEquals("New Description", taskManager.getTask(task.getId()).getDescription());
+    }
 
-@Test
-public void testEpicIntegrityAfterTaskRemoval() {
-    Epic epic = taskManager.createEpic(new Epic("Epic for integrity", "Description"));
-    Subtask subtask = new Subtask(0, "Subtask", "Description", epic.getId());
-    taskManager.createSubtask(subtask);
+    @Test
+    public void testEpicIntegrityAfterTaskRemoval() {
+        Epic epic = taskManager.createEpic(new Epic("Epic for integrity", "Description"));
+        Subtask subtask = new Subtask(0, "Subtask", "Description", epic.getId());
+        taskManager.createSubtask(subtask);
 
-    taskManager.deletedSubtask(subtask.getId());
-    assertFalse(epic.getSubtask().contains(subtask), "Epic should not contain the removed subtask");
-}
+        taskManager.deletedSubtask(subtask.getId());
+        assertFalse(epic.getSubtask().contains(subtask), "Epic should not contain the removed subtask");
+    }
 }
