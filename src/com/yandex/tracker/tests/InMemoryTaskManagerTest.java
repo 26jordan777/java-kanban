@@ -4,15 +4,14 @@ import com.yandex.tracker.model.Epic;
 import com.yandex.tracker.model.Subtask;
 import com.yandex.tracker.model.Task;
 import com.yandex.tracker.service.InMemoryTaskManager;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class InMemoryTaskManagerTest {
-    // Патимат, привет! извиняюсь, почему-то не загрузились данные в классы,
-    // сами классы загрузились, но без дынных.
     private InMemoryTaskManager taskManager;
 
     @BeforeEach
@@ -26,7 +25,7 @@ public class InMemoryTaskManagerTest {
         taskManager.createTask(task);
 
         Task retrievedTask = taskManager.getTask(task.getId());
-        Assertions.assertEquals(task, retrievedTask);
+        assertEquals(task, retrievedTask);
     }
 
     @Test
@@ -36,7 +35,7 @@ public class InMemoryTaskManagerTest {
         taskManager.createSubtask(subtask);
 
         Subtask retrievedSubtask = taskManager.getSubtask(subtask.getId());
-        Assertions.assertEquals(subtask, retrievedSubtask);
+        assertEquals(subtask, retrievedSubtask);
     }
 
     @Test
@@ -48,9 +47,9 @@ public class InMemoryTaskManagerTest {
         taskManager.getTask(task2.getId());
 
         List<Task> history = taskManager.getHistory();
-        Assertions.assertEquals(2, history.size());
-        Assertions.assertEquals(task1, history.get(0));
-        Assertions.assertEquals(task2, history.get(1));
+        assertEquals(2, history.size());
+        assertEquals(task1, history.get(0));
+        assertEquals(task2, history.get(1));
     }
 
     @Test
@@ -64,7 +63,79 @@ public class InMemoryTaskManagerTest {
         }
 
         List<Task> history = taskManager.getHistory();
-        Assertions.assertEquals(10, history.size());
+        assertEquals(10, history.size());
     }
 
+    @Test
+    public void testRemoveTask() {
+        Task task = taskManager.createTask(new Task("Task to Remove", "Description"));
+        taskManager.deletedTask(task.getId());
+
+        assertNull(taskManager.getTask(task.getId()), "Task should be removed");
+    }
+
+    @Test
+    public void testRemoveSubtaskUpdatesEpic() {
+        Epic epic = taskManager.createEpic(new Epic("Epic for Subtask", "Description"));
+        Subtask subtask = new Subtask(0, "Subtask to Remove", "Description", epic.getId());
+        taskManager.createSubtask(subtask);
+
+        taskManager.deletedSubtask(subtask.getId());
+
+        assertTrue(epic.getSubtask().isEmpty(), "Epic should not have subtasks after removal");
+    }
+
+    @Test
+    public void testUpdateTask() {
+        Task task = taskManager.createTask(new Task("Original Task", "Description"));
+        task.setDescription("Updated Description");
+        taskManager.updateTask(task);
+
+        assertEquals("Updated Description", taskManager.getTask(task.getId()).getDescription());
+    }
+
+    @Test
+    public void testIntegrityAfterSubtaskRemoval() {
+        Epic epic = taskManager.createEpic(new Epic("Epic Name", "Epic Description"));
+        Subtask subtask = new Subtask(0, "Subtask", "Subtask Description", epic.getId());
+        taskManager.createSubtask(subtask);
+
+        taskManager.deletedSubtask(subtask.getId());
+
+        assertTrue(epic.getSubtask().isEmpty(), "Epic should have no subtasks");
+    }
+
+    @Test
+    public void testRemoveNonExistentTask() {
+    taskManager.deletedTask(999);
+    assertEquals(0, taskManager.getAllTasks().size(), "No tasks should remain");
+}
+
+@Test
+public void testRemoveNonExistentSubtask() {
+    Epic epic = taskManager.createEpic(new Epic("Epic Name", "Epic Description"));
+    taskManager.deletedSubtask(999);
+    assertEquals(0, epic.getSubtask().size(), "Epic should still have no subtasks");
+}
+
+@Test
+public void testTaskSetterUpdatesTask() {
+    Task task = new Task("Initial Task", "Description");
+    taskManager.createTask(task);
+
+    task.setDescription("New Description");
+    taskManager.updateTask(task);
+
+    assertEquals("New Description", taskManager.getTask(task.getId()).getDescription());
+}
+
+@Test
+public void testEpicIntegrityAfterTaskRemoval() {
+    Epic epic = taskManager.createEpic(new Epic("Epic for integrity", "Description"));
+    Subtask subtask = new Subtask(0, "Subtask", "Description", epic.getId());
+    taskManager.createSubtask(subtask);
+
+    taskManager.deletedSubtask(subtask.getId());
+    assertFalse(epic.getSubtask().contains(subtask), "Epic should not contain the removed subtask");
+}
 }
