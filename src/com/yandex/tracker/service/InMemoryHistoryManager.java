@@ -10,7 +10,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private final HashMap<Integer, Node> historyMap = new HashMap<>();
     private Node head;
     private Node tail;
-    private static final int MAX_HISTORY_SIZE = 10;
+
 
     @Override
     public void add(Task task) {
@@ -19,14 +19,8 @@ public class InMemoryHistoryManager implements HistoryManager {
             removeNode(historyMap.get(task.getId()));
         }
 
-        Node newNode = new Node(task);
-        linkLast(newNode);
-
-        historyMap.put(task.getId(), newNode);
-
-        if (historyMap.size() > MAX_HISTORY_SIZE) {
-            removeNode(head);
-        }
+        linkLast(new Node(task));
+        historyMap.put(task.getId(), tail);
     }
 
     @Override
@@ -54,6 +48,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void removeNode(Node node) {
+        if (node == null) {
+            return;
+        }
         if (node.prev != null) {
             node.prev.next = node.next;
         } else {
