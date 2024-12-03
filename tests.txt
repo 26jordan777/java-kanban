@@ -1,0 +1,13 @@
+./src/com/yandex/tracker/Main.java
+./src/com/yandex/tracker/model/Epic.java
+./src/com/yandex/tracker/model/Status.java
+./src/com/yandex/tracker/model/Subtask.java
+./src/com/yandex/tracker/model/Task.java
+./src/com/yandex/tracker/service/HistoryManager.java
+./src/com/yandex/tracker/service/InMemoryHistoryManager.java
+./src/com/yandex/tracker/service/InMemoryTaskManager.java
+./src/com/yandex/tracker/service/Managers.java
+./src/com/yandex/tracker/service/Node.java
+./src/com/yandex/tracker/service/TaskManager.java
+./src/test/InMemoryHistoryManagerTest.java
+./src/test/InMemoryTaskManagerTest.java
