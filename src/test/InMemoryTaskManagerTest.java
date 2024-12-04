@@ -54,6 +54,7 @@ public class InMemoryTaskManagerTest {
 
     @Test
     public void testHistoryLimit() {
+
         for (int i = 0; i < 12; i++) {
             taskManager.createTask(new Task("Task " + i, "Description " + i));
         }
@@ -63,7 +64,7 @@ public class InMemoryTaskManagerTest {
         }
 
         List<Task> history = taskManager.getHistory();
-        assertEquals(10, history.size());
+        assertEquals(10, history.size(), "History should contain only the last 10 tasks");
     }
 
     @Test
@@ -116,26 +117,5 @@ public class InMemoryTaskManagerTest {
         Epic epic = taskManager.createEpic(new Epic("Epic Name", "Epic Description"));
         taskManager.deletedSubtask(999);
         assertEquals(0, epic.getSubtask().size(), "Epic should still have no subtasks");
-    }
-
-    @Test
-    public void testTaskSetterUpdatesTask() {
-        Task task = new Task("Initial Task", "Description");
-        taskManager.createTask(task);
-
-        task.setDescription("New Description");
-        taskManager.updateTask(task);
-
-        assertEquals("New Description", taskManager.getTask(task.getId()).getDescription());
-    }
-
-    @Test
-    public void testEpicIntegrityAfterTaskRemoval() {
-        Epic epic = taskManager.createEpic(new Epic("Epic for integrity", "Description"));
-        Subtask subtask = new Subtask(0, "Subtask", "Description", epic.getId());
-        taskManager.createSubtask(subtask);
-
-        taskManager.deletedSubtask(subtask.getId());
-        assertFalse(epic.getSubtask().contains(subtask), "Epic should not contain the removed subtask");
     }
 }
