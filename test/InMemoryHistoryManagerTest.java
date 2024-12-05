@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InMemoryHistoryManagerTest {
@@ -41,7 +42,9 @@ public class InMemoryHistoryManagerTest {
 
     @Test
     public void testGetHistoryEmpty() {
-        assertTrue(historyManager.getHistory().isEmpty());
+
+        InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
+        assertTrue(historyManager.getHistory().isEmpty(), "History should be empty initially");
     }
 
 }
