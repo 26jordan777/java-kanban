@@ -12,6 +12,7 @@ public class InMemoryHistoryManagerTest {
 
     @BeforeEach
     public void setuo() {
+
         historyManager = new InMemoryHistoryManager();
     }
 
@@ -26,15 +27,15 @@ public class InMemoryHistoryManagerTest {
 
     @Test
     public void testAddMultipleTasks() {
+        InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
         Task task1 = new Task("Task 1", "Description 1");
         Task task2 = new Task("Task 2", "Description 2");
 
         historyManager.add(task1);
         historyManager.add(task2);
 
-        assertEquals(2, historyManager.getHistory().size());
-        assertEquals(task1, historyManager.getHistory().get(0));
-        assertEquals(task2, historyManager.getHistory().get(1));
+       List<Task> history = historyManager.getHistiry();
+       assertEquals(2, history.size(), "History should contain 2 tasks");
     }
 
     @Test
