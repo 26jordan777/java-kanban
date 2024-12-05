@@ -34,8 +34,8 @@ public class InMemoryHistoryManagerTest {
         historyManager.add(task1);
         historyManager.add(task2);
 
-       List<Task> history = historyManager.getHistiry();
-       assertEquals(2, history.size(), "History should contain 2 tasks");
+       List<Task> tasks = historyManager.getHistory();
+       assertEquals(2, tasks.size(), "History should contain 2 tasks");
     }
 
     @Test
