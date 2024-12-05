@@ -4,8 +4,9 @@ import com.yandex.tracker.model.Task;
 import com.yandex.tracker.service.InMemoryHistoryManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InMemoryHistoryManagerTest {
     private InMemoryHistoryManager historyManager;
