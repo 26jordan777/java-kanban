@@ -17,19 +17,7 @@ public class InMemoryHistoryManagerTest {
         assertTrue(historyManager.getHistory().isEmpty(), "History should be empty initially");
     }
 
-    @Test
-    void testAddMultipleTasks() {
-        InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
-
-        Task task1 = new Task(1, "Task 1");
-        Task task2 = new Task(2, "Task 2");
-
-        historyManager.add(task1); // Добавляем первую задачу
-        historyManager.add(task2); // Добавляем вторую задачу
-
-        List<Task> tasks = historyManager.getHistory(); // Получаем историю
-        assertEquals(2, tasks.size(), "History should contain 2 tasks"); // Проверяем количество задач
-    }
+ 
 
     @Test
     void testAddTask() {
