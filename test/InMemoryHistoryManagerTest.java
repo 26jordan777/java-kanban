@@ -17,12 +17,12 @@ public class InMemoryHistoryManagerTest {
         assertTrue(historyManager.getHistory().isEmpty(), "History should be empty initially");
     }
 
- 
+
 
     @Test
     void testAddTask() {
         InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
-        Task task = new Task(1, "Task 1");
+        Task task = new Task(task1, "Task 1");
         historyManager.add(task);
 
         List<Task> tasks = historyManager.getHistory();
