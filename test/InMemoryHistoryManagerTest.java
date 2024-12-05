@@ -22,7 +22,7 @@ public class InMemoryHistoryManagerTest {
     @Test
     void testAddTask() {
         InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
-        Task task = new Task(task1, "Task 1");
+        Task task = new Task("Task", "Task 1");
         historyManager.add(task);
 
         List<Task> tasks = historyManager.getHistory();
