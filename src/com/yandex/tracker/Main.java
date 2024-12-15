@@ -11,32 +11,35 @@ import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
+        TaskManager taskManager = Managers.getDefault();
+
         File file = new File("tasks.csv");
-        FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
+
+        FileBackedTaskManager fileBackedManager = new FileBackedTaskManager(file);
 
         if (file.exists()) {
-            taskManager = FileBackedTaskManager.loadFromFile(file);
+            fileBackedManager = FileBackedTaskManager.loadFromFile(file);
         }
 
-        Task task1 = taskManager.createTask(new Task("Найти университет", "Подать документы в приемную комиссию"));
-        Task task2 = taskManager.createTask(new Task("Купить продукты", "Купить сыр, молоко и хлеб"));
+        Task task1 = fileBackedManager.createTask(new Task("Найти университет", "Подать документы в приемную комиссию"));
+        Task task2 = fileBackedManager.createTask(new Task("Купить продукты", "Купить сыр, молоко и хлеб"));
 
-        Epic epic1 = taskManager.createEpic(new Epic("Поступление в университет", "Подготовиться к поступлению"));
+        Epic epic1 = fileBackedManager.createEpic(new Epic("Поступление в университет", "Подготовиться к поступлению"));
 
-        Subtask subtask1 = taskManager.createSubtask(new Subtask(0, "Собрать все необходимые документы", "Собрать все документы в папку", epic1.getId()));
-        Subtask subtask2 = taskManager.createSubtask(new Subtask(0, "Проверить документы", "Убедиться в их корректности", epic1.getId()));
+        Subtask subtask1 = fileBackedManager.createSubtask(new Subtask(0, "Собрать все необходимые документы", "Собрать все документы в папку", epic1.getId()));
+        Subtask subtask2 = fileBackedManager.createSubtask(new Subtask(0, "Проверить документы", "Убедиться в их корректности", epic1.getId()));
 
-        Epic epic2 = taskManager.createEpic(new Epic("Найти работу", "Начать поиск новой работы"));
-        Subtask subtask3 = taskManager.createSubtask(new Subtask(0, "Обновить резюме", "Добавить новую информацию в резюме", epic2.getId()));
+        Epic epic2 = fileBackedManager.createEpic(new Epic("Найти работу", "Начать поиск новой работы"));
+        Subtask subtask3 = fileBackedManager.createSubtask(new Subtask(0, "Обновить резюме", "Добавить новую информацию в резюме", epic2.getId()));
 
-        taskManager.getTask(task1.getId());
-        System.out.println("История после получения задачи 1: " + taskManager.getHistory());
-        taskManager.getSubtask(subtask1.getId());
-        System.out.println("История после получения подзадачи 1: " + taskManager.getHistory());
-        taskManager.getEpic(epic1.getId());
-        System.out.println("История после получения эпика 1: " + taskManager.getHistory());
+        fileBackedManager.getTask(task1.getId());
+        System.out.println("История после получения задачи 1: " + fileBackedManager.getHistory());
+        fileBackedManager.getSubtask(subtask1.getId());
+        System.out.println("История после получения подзадачи 1: " + fileBackedManager.getHistory());
+        fileBackedManager.getEpic(epic1.getId());
+        System.out.println("История после получения эпика 1: " + fileBackedManager.getHistory());
 
-        printAllTasks(taskManager);
+        printAllTasks(fileBackedManager);
     }
 
     private static void printAllTasks(TaskManager manager) {
