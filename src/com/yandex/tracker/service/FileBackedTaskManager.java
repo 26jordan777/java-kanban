@@ -18,6 +18,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.file = file;
     }
 
+
     public void save() {
         try {
             List<String> taskLines = new ArrayList<>();
@@ -25,11 +26,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             taskLines.add("id,type,name,status,description,epic");
 
 
-            for (Task task : getTasks()) {
+            for (Task task : getAllTasks()) {
                 taskLines.add(taskToString(task));
             }
 
-            for (Epic epic : getEpics()) {
+
+            for (Epic epic : getAllEpics()) {
                 taskLines.add(epicToString(epic));
                 for (Subtask subtask : epic.getSubtask()) {
                     taskLines.add(subtaskToString(subtask));
@@ -42,15 +44,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private String taskToString(Task task) {
-        return String.format("%d,%s,%s,%s,%s,", task.getId(), TaskType.TASK, task.getName(), task.getStatus(), task.getDescription());
+        return String.format("%d,%s,%s,%s,%s,",
+                task.getId(), TaskType.TASK, task.getName(), task.getStatus(), task.getDescription());
     }
 
     private String epicToString(Epic epic) {
-        return String.format("%d,%s,%s,%s,%s,", epic.getId(), TaskType.EPIC, epic.getName(), epic.getStatus(), epic.getDescription());
+        return String.format("%d,%s,%s,%s,%s,",
+                epic.getId(), TaskType.EPIC, epic.getName(), epic.getStatus(), epic.getDescription());
     }
 
     private String subtaskToString(Subtask subtask) {
-        return String.format("%d,%s,%s,%s,%d", subtask.getId(), TaskType.SUBTASK, subtask.getName(), subtask.getStatus(), subtask.getEpicId());
+        return String.format("%d,%s,%s,%s,%d",
+                subtask.getId(), TaskType.SUBTASK, subtask.getName(), subtask.getStatus(), subtask.getEpicId());
     }
 
     @Override
@@ -71,30 +76,29 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
+
     public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
         try {
             List<String> lines = Files.readAllLines(file.toPath());
             if (lines.size() > 1) {
-                for (String line : lines.subList(1, lines.size())) { // Пропускаем заголовок
+                for (String line : lines.subList(1, lines.size())) {
                     String[] parts = line.split(",");
+                    if (parts.length < 5) continue;
+
                     switch (parts[1]) {
                         case "TASK":
-                            if (parts.length >= 5) {
-                                Task task = new Task(parts[2], parts[4]);
-                                task.setId(Integer.parseInt(parts[0]));
-                                manager.addTask(task);
-                            }
+                            Task task = new Task(parts[2], parts[4]);
+                            task.setId(Integer.parseInt(parts[0]));
+                            manager.addTask(task);
                             break;
                         case "EPIC":
-                            if (parts.length >= 5) {
-                                Epic epic = new Epic(parts[2], parts[4]);
-                                epic.setId(Integer.parseInt(parts[0]));
-                                manager.addEpic(epic);
-                            }
+                            Epic epic = new Epic(parts[2], parts[4]);
+                            epic.setId(Integer.parseInt(parts[0]));
+                            manager.addEpic(epic);
                             break;
                         case "SUBTASK":
-                            if (parts.length >= 6) {
+                            if (parts.length == 6) {
                                 Subtask subtask = new Subtask(Integer.parseInt(parts[0]), parts[2], parts[4], Integer.parseInt(parts[5]));
                                 manager.addSubtask(subtask);
                             }
