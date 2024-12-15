@@ -73,6 +73,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         super.addSubtask(subtask);
         save();
     }
+
     public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
         try {
