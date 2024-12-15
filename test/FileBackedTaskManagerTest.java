@@ -67,4 +67,18 @@ public class FileBackedTaskManagerTest {
         assertEquals(1, loadedManager.getAllEpics().size());
         assertEquals(2, loadedManager.getAllSubtasks().size());
     }
+
+    @Test
+    public void testLoadFromFile() {
+        Task task1 = new Task("Task 1", "Description for task 1");
+        Task task2 = new Task("Task 2", "Description for task 2");
+
+        manager.addTask(task1);
+        manager.addTask(task2);
+        manager.save();
+
+        FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
+
+        assertEquals(2, loadedManager.getAllTasks().size());
+    }
 }
