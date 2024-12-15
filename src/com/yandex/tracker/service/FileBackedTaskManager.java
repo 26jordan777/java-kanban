@@ -84,21 +84,23 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             if (lines.size() > 1) {
                 for (String line : lines.subList(1, lines.size())) {
                     String[] parts = line.split(",");
-                    if (parts.length < 5) continue;
-
                     switch (parts[1]) {
                         case "TASK":
-                            Task task = new Task(parts[2], parts[4]);
-                            task.setId(Integer.parseInt(parts[0]));
-                            manager.addTask(task);
+                            if (parts.length >= 5) {
+                                Task task = new Task(parts[2], parts[4]);
+                                task.setId(Integer.parseInt(parts[0]));
+                                manager.addTask(task);
+                            }
                             break;
                         case "EPIC":
-                            Epic epic = new Epic(parts[2], parts[4]);
-                            epic.setId(Integer.parseInt(parts[0]));
-                            manager.addEpic(epic);
+                            if (parts.length >= 5) {
+                                Epic epic = new Epic(parts[2], parts[4]);
+                                epic.setId(Integer.parseInt(parts[0]));
+                                manager.addEpic(epic);
+                            }
                             break;
                         case "SUBTASK":
-                            if (parts.length == 6) {
+                            if (parts.length >= 6) {
                                 Subtask subtask = new Subtask(Integer.parseInt(parts[0]), parts[2], parts[4], Integer.parseInt(parts[5]));
                                 manager.addSubtask(subtask);
                             }
