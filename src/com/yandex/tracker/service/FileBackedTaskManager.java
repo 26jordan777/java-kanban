@@ -82,7 +82,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try {
             List<String> lines = Files.readAllLines(file.toPath());
             if (lines.size() > 1) {
-                for (String line : lines.subList(1, lines.size())) {
+                for (String line : lines.subList(2, lines.size())) {
                     String[] parts = line.split(",");
                     switch (parts[1]) {
                         case "TASK":
