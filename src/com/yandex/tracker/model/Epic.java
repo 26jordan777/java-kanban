@@ -7,7 +7,7 @@ public class Epic extends Task {
     private List<Subtask> subtasks;
 
     public Epic(String name, String description) {
-        super( name, description);
+        super(name, description);
         this.subtasks = new ArrayList<>();
     }
 
@@ -29,15 +29,10 @@ public class Epic extends Task {
             setStatus(Status.IN_PROGRESS);
         }
     }
+
     @Override
     public String toString() {
-        return "Epic{" +
-                "id=" + getId() +
-                ", name='" + getName() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", status=" + getStatus() +
-                ", subtasksCount=" + subtasks.size() +
-                '}';
+        return "Epic{" + "id=" + getId() + ", name='" + getName() + '\'' + ", description='" + getDescription() + '\'' + ", status=" + getStatus() + ", subtasksCount=" + subtasks.size() + '}';
     }
 }
 
