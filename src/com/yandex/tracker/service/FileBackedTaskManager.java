@@ -42,18 +42,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private String taskToString(Task task) {
-        return String.format("%d,%s,%s,%s,%s,",
-                task.getId(), TaskType.TASK, task.getName(), task.getStatus(), task.getDescription());
+        return String.format("%d,%s,%s,%s,%s,", task.getId(), TaskType.TASK, task.getName(), task.getStatus(), task.getDescription());
     }
 
     private String epicToString(Epic epic) {
-        return String.format("%d,%s,%s,%s,%s,",
-                epic.getId(), TaskType.EPIC, epic.getName(), epic.getStatus(), epic.getDescription());
+        return String.format("%d,%s,%s,%s,%s,", epic.getId(), TaskType.EPIC, epic.getName(), epic.getStatus(), epic.getDescription());
     }
 
     private String subtaskToString(Subtask subtask) {
-        return String.format("%d,%s,%s,%s,%d",
-                subtask.getId(), TaskType.SUBTASK, subtask.getName(), subtask.getStatus(), subtask.getEpicId());
+        return String.format("%d,%s,%s,%s,%d", subtask.getId(), TaskType.SUBTASK, subtask.getName(), subtask.getStatus(), subtask.getEpicId());
     }
 
     @Override
@@ -78,23 +75,31 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
         try {
             List<String> lines = Files.readAllLines(file.toPath());
-            for (String line : lines.subList(1, lines.size())) { // Пропускаем заголовок
-                String[] parts = line.split(",");
-                switch (parts[1]) {
-                    case "TASK":
-                        Task task = new Task(parts[2], parts[4]);
-                        task.setId(Integer.parseInt(parts[0]));
-                        manager.addTask(task);
-                        break;
-                    case "EPIC":
-                        Epic epic = new Epic(parts[2], parts[4]);
-                        epic.setId(Integer.parseInt(parts[0]));
-                        manager.addEpic(epic);
-                        break;
-                    case "SUBTASK":
-                        Subtask subtask = new Subtask(Integer.parseInt(parts[0]), parts[2], parts[4], Integer.parseInt(parts[5]));
-                        manager.addSubtask(subtask);
-                        break;
+            if (lines.size() > 1) {
+                for (String line : lines.subList(1, lines.size())) { // Пропускаем заголовок
+                    String[] parts = line.split(",");
+                    switch (parts[1]) {
+                        case "TASK":
+                            if (parts.length >= 5) {
+                                Task task = new Task(parts[2], parts[4]);
+                                task.setId(Integer.parseInt(parts[0]));
+                                manager.addTask(task);
+                            }
+                            break;
+                        case "EPIC":
+                            if (parts.length >= 5) {
+                                Epic epic = new Epic(parts[2], parts[4]);
+                                epic.setId(Integer.parseInt(parts[0]));
+                                manager.addEpic(epic);
+                            }
+                            break;
+                        case "SUBTASK":
+                            if (parts.length >= 6) {
+                                Subtask subtask = new Subtask(Integer.parseInt(parts[0]), parts[2], parts[4], Integer.parseInt(parts[5]));
+                                manager.addSubtask(subtask);
+                            }
+                            break;
+                    }
                 }
             }
         } catch (IOException e) {
