@@ -38,7 +38,6 @@ public class Main {
         manager.addSubtask(subtask3);
 
         manager.save();
-        
         manager.getTask(task1.getId());
         System.out.println("История после получения задачи 1: " + manager.getHistory());
         manager.getSubtask(subtask1.getId());
