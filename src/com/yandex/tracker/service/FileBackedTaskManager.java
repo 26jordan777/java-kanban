@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private File file;
+    private final File file;
 
     public FileBackedTaskManager(File file) {
         this.file = file;
@@ -82,28 +82,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try {
             List<String> lines = Files.readAllLines(file.toPath());
             if (lines.size() > 1) {
-                for (String line : lines.subList(2, lines.size())) {
+                for (String line : lines.subList(1, lines.size())) {
                     String[] parts = line.split(",");
-                    switch (parts[1]) {
-                        case "TASK":
-                            if (parts.length >= 5) {
-                                Task task = new Task(parts[2], parts[4]);
-                                task.setId(Integer.parseInt(parts[0]));
-                                manager.addTask(task);
-                            }
+                    if (parts.length < 5) continue;
+                    TaskType type = TaskType.valueOf(parts[1]);
+                    switch (type) {
+                        case TASK:
+                            Task task = new Task(parts[2], parts[4]);
+                            task.setId(Integer.parseInt(parts[0]));
+                            manager.addTask(task);
                             break;
-                        case "EPIC":
-                            if (parts.length >= 5) {
-                                Epic epic = new Epic(parts[2], parts[4]);
-                                epic.setId(Integer.parseInt(parts[0]));
-                                manager.addEpic(epic);
-                            }
+                        case EPIC:
+                            Epic epic = new Epic(parts[2], parts[4]);
+                            epic.setId(Integer.parseInt(parts[0]));
+                            manager.addEpic(epic);
                             break;
-                        case "SUBTASK":
-                            if (parts.length >= 6) {
-                                Subtask subtask = new Subtask(Integer.parseInt(parts[0]), parts[2], parts[4], Integer.parseInt(parts[5]));
-                                manager.addSubtask(subtask);
-                            }
+                        case SUBTASK:
+                            if (parts.length < 6) continue;
+                            Subtask subtask = new Subtask(Integer.parseInt(parts[0]), parts[2], parts[4], Integer.parseInt(parts[5]));
+                            manager.addSubtask(subtask);
                             break;
                     }
                 }

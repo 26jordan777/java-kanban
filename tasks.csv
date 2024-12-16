@@ -1,0 +1,6 @@
+id,type,name,status,description,epic
+0,TASK,Купить продукты,NEW,Купить сыр, молоко и хлеб,
+0,EPIC,Найти работу,IN_PROGRESS,Начать поиск новой работы,
+1,SUBTASK,Собрать все необходимые документы,NEW,0
+2,SUBTASK,Проверить документы,NEW,0
+3,SUBTASK,Обновить резюме,NEW,0
