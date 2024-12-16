@@ -43,20 +43,27 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void testSaveAndLoadMultipleTasks() {
+        File file = new File("tasks.csv");
+        FileBackedTaskManager manager = new FileBackedTaskManager(file);
+
+        //Задачи
         Task task1 = new Task("Task 1", "Description for task 1");
         Task task2 = new Task("Task 2", "Description for task 2");
-
-        Epic epic = new Epic("Epic 1", "Description for epic 1");
-        manager.addEpic(epic);
-        Subtask subtask1 = new Subtask(1, "Subtask 1", "Description for subtask 1", epic.getId());
-        Subtask subtask2 = new Subtask(2, "Subtask 2", "Description for subtask 2", epic.getId());
         manager.addTask(task1);
         manager.addTask(task2);
+        //Эпик
+        Epic epic = new Epic("Epic 1", "Description for epic 1");
+        manager.addEpic(epic);
+        //Подзадачи
+        Subtask subtask1 = new Subtask(1, "Subtask 1", "Description for subtask 1", epic.getId());
+        Subtask subtask2 = new Subtask(2, "Subtask 2", "Description for subtask 2", epic.getId());
         manager.addSubtask(subtask1);
         manager.addSubtask(subtask2);
 
         manager.save();
+
         FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
+        
         assertEquals(2, loadedManager.getAllTasks().size(), "ожидалось: <2>, но было: <" + loadedManager.getAllTasks().size() + ">");
         assertEquals(1, loadedManager.getAllEpics().size(), "ожидалось: <1>, но было: <" + loadedManager.getAllEpics().size() + ">");
         assertEquals(2, loadedManager.getAllSubtasks().size(), "ожидалось: <2>, но было: <" + loadedManager.getAllSubtasks().size() + ">");
