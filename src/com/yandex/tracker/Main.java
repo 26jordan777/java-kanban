@@ -10,25 +10,35 @@ import java.io.File;
 public class Main {
     public static void main(String[] args) {
         File file = new File("tasks.csv");
-
-
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
 
         if (file.exists()) {
             manager = FileBackedTaskManager.loadFromFile(file);
         }
 
-        Task task1 = manager.createTask(new Task("Найти университет", "Подать документы в приемную комиссию"));
-        Task task2 = manager.createTask(new Task("Купить продукты", "Купить сыр, молоко и хлеб"));
+        Task task1 = new Task("Найти университет", "Подать документы в приемную комиссию");
+        Task task2 = new Task("Купить продукты", "Купить сыр, молоко и хлеб");
 
-        Epic epic1 = manager.createEpic(new Epic("Поступление в университет", "Подготовиться к поступлению"));
+        manager.addTask(task1);
+        manager.addTask(task2);
 
-        Subtask subtask1 = manager.createSubtask(new Subtask(0, "Собрать все необходимые документы", "Собрать все документы в папку", epic1.getId()));
-        Subtask subtask2 = manager.createSubtask(new Subtask(0, "Проверить документы", "Убедиться в их корректности", epic1.getId()));
+        Epic epic1 = new Epic("Поступление в университет", "Подготовиться к поступлению");
+        manager.addEpic(epic1);
 
-        Epic epic2 = manager.createEpic(new Epic("Найти работу", "Начать поиск новой работы"));
-        Subtask subtask3 = manager.createSubtask(new Subtask(0, "Обновить резюме", "Добавить новую информацию в резюме", epic2.getId()));
+        Subtask subtask1 = new Subtask(1, "Собрать все необходимые документы", "Собрать все документы в папку", epic1.getId());
+        Subtask subtask2 = new Subtask(2, "Проверить документы", "Убедиться в их корректности", epic1.getId());
 
+        Epic epic2 = new Epic("Найти работу", "Начать поиск новой работы");
+        manager.addEpic(epic2);
+
+        Subtask subtask3 = new Subtask(3, "Обновить резюме", "Добавить новую информацию в резюме", epic2.getId());
+
+        manager.addSubtask(subtask1);
+        manager.addSubtask(subtask2);
+        manager.addSubtask(subtask3);
+
+        manager.save();
+        
         manager.getTask(task1.getId());
         System.out.println("История после получения задачи 1: " + manager.getHistory());
         manager.getSubtask(subtask1.getId());
