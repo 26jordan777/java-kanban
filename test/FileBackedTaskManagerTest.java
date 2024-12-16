@@ -63,7 +63,7 @@ public class FileBackedTaskManagerTest {
         manager.save();
 
         FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
-        
+
         assertEquals(2, loadedManager.getAllTasks().size(), "ожидалось: <2>, но было: <" + loadedManager.getAllTasks().size() + ">");
         assertEquals(1, loadedManager.getAllEpics().size(), "ожидалось: <1>, но было: <" + loadedManager.getAllEpics().size() + ">");
         assertEquals(2, loadedManager.getAllSubtasks().size(), "ожидалось: <2>, но было: <" + loadedManager.getAllSubtasks().size() + ">");
@@ -80,6 +80,6 @@ public class FileBackedTaskManagerTest {
 
         FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
 
-        assertEquals(2, loadedManager.getAllTasks().size());
+        assertEquals(2, loadedManager.getAllTasks().size(), "ожидалось: <2>, но было: <" + loadedManager.getAllTasks().size() + ">");
     }
 }
