@@ -1,7 +1,6 @@
 package com.yandex.tracker.model;
 
 public class Task {
-
     private int id;
     private String name;
     private String description;
@@ -13,7 +12,6 @@ public class Task {
         this.status = Status.NEW;
     }
 
-
     public int getId() {
         return id;
     }
@@ -23,18 +21,19 @@ public class Task {
     }
 
     public String getName() {
-
         return name;
     }
 
-    public void setDescription(String description) {
-
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
-
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Status getStatus() {
@@ -45,6 +44,19 @@ public class Task {
         this.status = status;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%d,TASK,%s,%s,%s,",
+                id, name, status, description);
+    }
+
+    public static Task fromString(String value) {
+        String[] fields = value.split(",");
+        Task task = new Task(fields[2], fields[4]);
+        task.setId(Integer.parseInt(fields[0]));
+        task.setStatus(Status.valueOf(fields[3]));
+        return task;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -58,11 +70,4 @@ public class Task {
     public int hashCode() {
         return Integer.hashCode(id);
     }
-
-    @Override
-    public String toString() {
-        return "Task{" + "id=" + id + ", name='" + name + '\'' + ", description='" + description + '\'' + ", status=" + status + '}';
-    }
 }
-
-

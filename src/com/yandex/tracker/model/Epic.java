@@ -24,7 +24,6 @@ public class Epic extends Task {
             setStatus(Status.NEW);
         } else if (subtasks.stream().allMatch(subtask -> subtask.getStatus() == Status.DONE)) {
             setStatus(Status.DONE);
-
         } else {
             setStatus(Status.IN_PROGRESS);
         }
@@ -32,7 +31,15 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" + "id=" + getId() + ", name='" + getName() + '\'' + ", description='" + getDescription() + '\'' + ", status=" + getStatus() + ", subtasksCount=" + subtasks.size() + '}';
+        return String.format("%d,EPIC,%s,%s,%s,",
+                getId(), getName(), getStatus(), getDescription());
+    }
+
+    public static Epic fromString(String value) {
+        String[] fields = value.split(",");
+        Epic epic = new Epic(fields[2], fields[4]);
+        epic.setId(Integer.parseInt(fields[0]));
+        epic.setStatus(Status.valueOf(fields[3]));
+        return epic;
     }
 }
-
