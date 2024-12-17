@@ -3,7 +3,6 @@ package com.yandex.tracker.service;
 import com.yandex.tracker.model.Epic;
 import com.yandex.tracker.model.Subtask;
 import com.yandex.tracker.model.Task;
-import com.yandex.tracker.model.Status;
 
 import java.io.*;
 import java.nio.file.Files;
