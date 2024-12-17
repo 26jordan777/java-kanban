@@ -46,6 +46,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         try {
             List<String> lines = Files.readAllLines(file.toPath());
+            if (lines.size() <= 1){
+                return;
+            }
             for (String line : lines.subList(1, lines.size())) {
                 if (line.startsWith("TASK")) {
                     Task task = Task.fromString(line);
