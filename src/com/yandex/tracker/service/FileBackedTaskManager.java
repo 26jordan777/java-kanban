@@ -46,7 +46,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         try {
             List<String> lines = Files.readAllLines(file.toPath());
-            
             if (lines.size() <= 1) {
                 return;
             }
