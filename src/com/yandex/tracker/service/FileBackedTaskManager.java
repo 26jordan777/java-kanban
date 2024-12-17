@@ -4,6 +4,7 @@ import com.yandex.tracker.model.Epic;
 import com.yandex.tracker.model.Subtask;
 import com.yandex.tracker.model.Task;
 
+
 import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
@@ -14,7 +15,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public FileBackedTaskManager(File file) {
         this.file = file;
-        loadFromFile(file);
+        loadFromFile();
     }
 
     public void save() {
@@ -38,28 +39,28 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager manager = new FileBackedTaskManager(file);
+    private void loadFromFile() {
+        if (!file.exists()) {
+            return;
+        }
 
         try {
             List<String> lines = Files.readAllLines(file.toPath());
             for (String line : lines.subList(1, lines.size())) {
                 if (line.startsWith("TASK")) {
                     Task task = Task.fromString(line);
-                    manager.createTask(task);
+                    createTask(task);
                 } else if (line.startsWith("SUBTASK")) {
                     Subtask subtask = Subtask.fromString(line);
-                    manager.createSubtask(subtask);
+                    createSubtask(subtask);
                 } else if (line.startsWith("EPIC")) {
                     Epic epic = Epic.fromString(line);
-                    manager.createEpic(epic);
+                    createEpic(epic);
                 }
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка при загрузке задач", e);
         }
-
-        return manager;
     }
 
     @Override
