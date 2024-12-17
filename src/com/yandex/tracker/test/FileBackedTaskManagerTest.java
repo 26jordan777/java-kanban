@@ -7,40 +7,40 @@ import com.yandex.tracker.service.FileBackedTaskManager;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileBackedTaskManagerTest {
 
     @Test
-    public void testSaveAndLoad() throws IOException {
+    public void testSaveAndLoad() throws Exception {
         File tempFile = File.createTempFile("taskManager", ".csv");
         tempFile.deleteOnExit();
-        FileBackedTaskManager manager = new FileBackedTaskManager(tempFile);
-        manager.createTask(new Task("Task 1", "Description task1"));
-        manager.createEpic(new Epic("Epic 1", "Description epic1"));
-        manager.createSubtask(new Subtask(1, "Subtask 1", "Description subtask1", 2));
 
-        manager.save();
+        FileBackedTaskManager taskManager = new FileBackedTaskManager(tempFile);
+        taskManager.createTask(new Task("Task1", "Description task1"));
+        taskManager.createEpic(new Epic("Epic1", "Description epic1"));
+        taskManager.createSubtask(new Subtask(1, "Subtask1", "Description subtask1", 2));
 
 
-        FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
+        taskManager.save();
 
-        assertEquals(1, loadedManager.getTasks().size());
-        assertEquals(1, loadedManager.getEpics().size());
-        assertEquals(1, loadedManager.getSubtasks().size());
+        FileBackedTaskManager loadedManager = new FileBackedTaskManager(tempFile);
+
+        assertEquals(1, loadedManager.getAllTasks().size());
+        assertEquals(1, loadedManager.getAllEpics().size());
+        assertEquals(1, loadedManager.getAllSubtasks().size());
     }
 
     @Test
-    public void testLoadEmptyFile() throws IOException {
+    public void testLoadEmptyFile() throws Exception {
         File tempFile = File.createTempFile("emptyTaskManager", ".csv");
         tempFile.deleteOnExit();
 
-        FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
+        FileBackedTaskManager loadedManager = new FileBackedTaskManager(tempFile);
 
-        assertEquals(0, loadedManager.getTasks().size());
-        assertEquals(0, loadedManager.getEpics().size());
-        assertEquals(0, loadedManager.getSubtasks().size());
+        assertEquals(0, loadedManager.getAllTasks().size());
+        assertEquals(0, loadedManager.getAllEpics().size());
+        assertEquals(0, loadedManager.getAllSubtasks().size());
     }
 }
