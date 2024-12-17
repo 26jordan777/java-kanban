@@ -148,6 +148,7 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Epic> getEpics() {
         return new ArrayList<>(epics.values());
     }
+
     @Override
     public Task getTask(int id) {
         Task task = tasks.get(id);
