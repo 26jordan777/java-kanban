@@ -6,8 +6,8 @@ import java.util.List;
 public class Epic extends Task {
     private List<Subtask> subtasks;
 
-    public Epic(String name, String description) {
-        super(name, description);
+    public Epic(int id, TaskType type, String name, Status status, String description) {
+        super(id, type, name, status, description);
         this.subtasks = new ArrayList<>();
     }
 
@@ -24,7 +24,6 @@ public class Epic extends Task {
             setStatus(Status.NEW);
         } else if (subtasks.stream().allMatch(subtask -> subtask.getStatus() == Status.DONE)) {
             setStatus(Status.DONE);
-
         } else {
             setStatus(Status.IN_PROGRESS);
         }
@@ -32,7 +31,6 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" + "id=" + getId() + ", name='" + getName() + '\'' + ", description='" + getDescription() + '\'' + ", status=" + getStatus() + ", subtasksCount=" + subtasks.size() + '}';
+        return String.format("%d,EPIC,%s,%s,%s,", getId(), getName(), getStatus(), getDescription());
     }
 }
-
