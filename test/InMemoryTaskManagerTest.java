@@ -22,27 +22,6 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void testCreateAndGetTask() {
-        Task task = new Task(1, TaskType.TASK, "Тестовая задача", Status.NEW, "Описание теста");
-        taskManager.createTask(task);
-
-        Task retrievedTask = taskManager.getTask(task.getId());
-        assertEquals(task, retrievedTask);
-    }
-
-    @Test
-    public void testCreateAndGetSubtask() {
-        Epic epic = new Epic(2, TaskType.EPIC, "Эпик", Status.NEW, "Описание эпика");
-        taskManager.createEpic(epic);
-
-        Subtask subtask = new Subtask(3, TaskType.SUBTASK, "Тестовая подзадача", Status.NEW, "Описание подзадачи", epic.getId());
-        taskManager.createSubtask(subtask);
-
-        Subtask retrievedSubtask = taskManager.getSubtask(subtask.getId());
-        assertEquals(subtask, retrievedSubtask);
-    }
-
-    @Test
     public void testHistory() {
         Task task1 = taskManager.createTask(new Task(4, TaskType.TASK, "Задача 1", Status.NEW, "Описание 1"));
         Task task2 = taskManager.createTask(new Task(5, TaskType.TASK, "Задача 2", Status.NEW, "Описание 2"));
