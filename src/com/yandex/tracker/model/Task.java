@@ -5,12 +5,18 @@ public class Task {
     private String name;
     private String description;
     private Status status;
+    private TaskType type;
 
-    public Task(String name, String description) {
+
+    public Task(int id, TaskType type, String name, Status status, String description) {
+        this.id = id;
+        this.type = type;
         this.name = name;
         this.description = description;
-        this.status = Status.NEW;
+        this.status = status;
     }
+
+
 
     public int getId() {
         return id;
@@ -44,30 +50,12 @@ public class Task {
         this.status = status;
     }
 
+    public TaskType getType() {
+        return type;
+    }
+
     @Override
     public String toString() {
-        return String.format("%d,TASK,%s,%s,%s,",
-                id, name, status, description);
-    }
-
-    public static Task fromString(String value) {
-        String[] fields = value.split(",");
-        Task task = new Task(fields[2], fields[4]);
-        task.setId(Integer.parseInt(fields[0]));
-        task.setStatus(Status.valueOf(fields[3]));
-        return task;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Task task = (Task) obj;
-        return id == task.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Integer.hashCode(id);
+        return String.format("%d,TASK,%s,%s,%s,", id, name, status, description);
     }
 }

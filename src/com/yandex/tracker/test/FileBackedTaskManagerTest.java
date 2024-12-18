@@ -1,8 +1,6 @@
 package com.yandex.tracker.test;
 
-import com.yandex.tracker.model.Epic;
-import com.yandex.tracker.model.Subtask;
-import com.yandex.tracker.model.Task;
+import com.yandex.tracker.model.*;
 import com.yandex.tracker.service.FileBackedTaskManager;
 import org.junit.jupiter.api.Test;
 
@@ -18,10 +16,10 @@ public class FileBackedTaskManagerTest {
         tempFile.deleteOnExit();
 
         FileBackedTaskManager taskManager = new FileBackedTaskManager(tempFile);
-        taskManager.createTask(new Task("Task1", "Description task1"));
-        taskManager.createEpic(new Epic("Epic1", "Description epic1"));
-        taskManager.createSubtask(new Subtask(1, "Subtask1", "Description subtask1", 2));
 
+        taskManager.createTask(new Task(0, TaskType.TASK, "Task1", Status.NEW, "Description task1"));
+        taskManager.createEpic(new Epic(0, TaskType.EPIC, "Epic1", Status.NEW, "Description epic1"));
+        taskManager.createSubtask(new Subtask(1, TaskType.SUBTASK, "Subtask1", Status.NEW, "Description subtask1", 0));
 
         taskManager.save();
 
@@ -38,7 +36,6 @@ public class FileBackedTaskManagerTest {
         tempFile.deleteOnExit();
 
         FileBackedTaskManager loadedManager = new FileBackedTaskManager(tempFile);
-
         assertEquals(0, loadedManager.getAllTasks().size());
         assertEquals(0, loadedManager.getAllEpics().size());
         assertEquals(0, loadedManager.getAllSubtasks().size());

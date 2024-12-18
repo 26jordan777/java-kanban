@@ -3,7 +3,8 @@ package com.yandex.tracker.service;
 import com.yandex.tracker.model.Epic;
 import com.yandex.tracker.model.Subtask;
 import com.yandex.tracker.model.Task;
-
+import com.yandex.tracker.model.Status;
+import com.yandex.tracker.model.TaskType;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -50,20 +51,38 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 return;
             }
             for (String line : lines.subList(1, lines.size())) {
-                if (line.startsWith("TASK")) {
-                    Task task = Task.fromString(line);
+                Task task = taskFromString(line);
+                if (task instanceof Subtask) {
+                    createSubtask((Subtask) task);
+                } else if (task instanceof Epic) {
+                    createEpic((Epic) task);
+                } else {
                     createTask(task);
-                } else if (line.startsWith("SUBTASK")) {
-                    Subtask subtask = Subtask.fromString(line);
-                    createSubtask(subtask);
-                } else if (line.startsWith("EPIC")) {
-                    Epic epic = Epic.fromString(line);
-                    createEpic(epic);
                 }
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка при загрузке задач", e);
         }
+    }
+
+    public static Task taskFromString(String value) {
+        final String[] values = value.split(",");
+        final int id = Integer.parseInt(values[0]);
+        final TaskType type = TaskType.valueOf(values[1]);
+        final String name = values[2];
+        final Status status = Status.valueOf(values[3]);
+        final String description = values[4];
+
+        if (type == TaskType.TASK) {
+            return new Task(id, type, name, status, description);
+        }
+
+        if (type == TaskType.SUBTASK) {
+            final int epicId = Integer.parseInt(values[5]);
+            return new Subtask(id, type, name, status, description, epicId);
+        }
+
+        return new Epic(id, type, name, status, description);
     }
 
     @Override
@@ -102,6 +121,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void deletedEpic(int id) {
         super.deletedEpic(id);
+        save();
+    }
+
+    @Override
+    public void updateTask(Task newTask) {
+        super.updateTask(newTask);
+        save();
+    }
+
+    @Override
+    public void updateSubtask(Subtask newSubtask) {
+        super.updateSubtask(newSubtask);
+        save();
+    }
+
+    @Override
+    public void updateEpic(Epic newEpic) {
+        super.updateEpic(newEpic);
         save();
     }
 }
