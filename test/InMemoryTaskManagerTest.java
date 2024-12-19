@@ -1,8 +1,8 @@
 package com.yandex.tracker.test;
 
+import com.yandex.tracker.model.Task;
 import com.yandex.tracker.model.Epic;
 import com.yandex.tracker.model.Subtask;
-import com.yandex.tracker.model.Task;
 import com.yandex.tracker.model.Status;
 import com.yandex.tracker.model.TaskType;
 import com.yandex.tracker.service.InMemoryTaskManager;
@@ -22,6 +22,27 @@ public class InMemoryTaskManagerTest {
     }
 
     @Test
+    public void testCreateAndGetTask() {
+        Task task = new Task(1, TaskType.TASK, "Тестовая задача", Status.NEW, "Описание теста");
+        taskManager.createTask(task);
+
+        Task retrievedTask = taskManager.getTask(task.getId());
+        assertEquals(task, retrievedTask, "Должны получить сохраненную задачу");
+    }
+
+    @Test
+    public void testCreateAndGetSubtask() {
+        Epic epic = new Epic(2, TaskType.EPIC, "Эпик", Status.NEW, "Описание эпика");
+        taskManager.createEpic(epic);
+
+        Subtask subtask = new Subtask(3, TaskType.SUBTASK, "Тестовая подзадача", Status.NEW, "Описание подзадачи", epic.getId());
+        taskManager.createSubtask(subtask);
+
+        Subtask retrievedSubtask = taskManager.getSubtask(subtask.getId());
+        assertEquals(subtask, retrievedSubtask, "Должны получить сохраненную подзадачу");
+    }
+
+    @Test
     public void testHistory() {
         Task task1 = taskManager.createTask(new Task(4, TaskType.TASK, "Задача 1", Status.NEW, "Описание 1"));
         Task task2 = taskManager.createTask(new Task(5, TaskType.TASK, "Задача 2", Status.NEW, "Описание 2"));
@@ -30,9 +51,9 @@ public class InMemoryTaskManagerTest {
         taskManager.getTask(task2.getId());
 
         List<Task> history = taskManager.getHistory();
-        assertEquals(2, history.size());
-        assertEquals(task1, history.get(0));
-        assertEquals(task2, history.get(1));
+        assertEquals(2, history.size(), "История должна содержать 2 задачи");
+        assertEquals(task1, history.get(0), "Первая задача в истории должна быть task1");
+        assertEquals(task2, history.get(1), "Вторая задача в истории должна быть task2");
     }
 
     @Test
@@ -46,7 +67,7 @@ public class InMemoryTaskManagerTest {
         }
 
         List<Task> history = taskManager.getHistory();
-        assertEquals(10, history.size(), "History should contain only the last 10 tasks");
+        assertEquals(10, history.size(), "История должна содержать только последние 10 задач");
     }
 
     @Test
@@ -54,7 +75,7 @@ public class InMemoryTaskManagerTest {
         Task task = taskManager.createTask(new Task(7, TaskType.TASK, "Задача на удаление", Status.NEW, "Описание"));
         taskManager.deleteTask(task.getId());
 
-        assertNull(taskManager.getTask(task.getId()), "Task should be removed");
+        assertNull(taskManager.getTask(task.getId()), "Задача должна быть удалена");
     }
 
     @Test
@@ -67,7 +88,7 @@ public class InMemoryTaskManagerTest {
 
         taskManager.deleteSubtask(subtask.getId());
 
-        assertTrue(epic.getSubtask().isEmpty(), "Epic should not have subtasks after removal");
+        assertTrue(epic.getSubtask().isEmpty(), "Эпик не должен иметь подзадачи после удаления");
     }
 
     @Test
@@ -76,7 +97,7 @@ public class InMemoryTaskManagerTest {
         task.setDescription("Обновленное описание");
         taskManager.updateTask(task);
 
-        assertEquals("Обновленное описание", taskManager.getTask(task.getId()).getDescription());
+        assertEquals("Обновленное описание", taskManager.getTask(task.getId()).getDescription(), "Описание должно быть обновлено");
     }
 
     @Test
@@ -84,25 +105,24 @@ public class InMemoryTaskManagerTest {
         Epic epic = new Epic(11, TaskType.EPIC, "Название эпика", Status.NEW, "Описание эпика");
         taskManager.createEpic(epic);
 
-        Subtask subtask = new Subtask(12, TaskType.SUBTASK, "Подзадача", "Описание подзадачи", epic.getId());
+        Subtask subtask = new Subtask(12, TaskType.SUBTASK, "Подзадача", Status.NEW, "Описание подзадачи", epic.getId());
         taskManager.createSubtask(subtask);
 
         taskManager.deleteSubtask(subtask.getId());
 
-        assertTrue(epic.getSubtask().isEmpty(), "Epic should have no subtasks");
+        assertTrue(epic.getSubtask().isEmpty(), "Эпик должен не иметь подзадач");
     }
 
     @Test
     public void testRemoveNonExistentTask() {
         taskManager.deleteTask(999);
-        assertEquals(0, taskManager.getAllTasks().size(), "No tasks should remain");
+        assertEquals(0, taskManager.getAllTasks().size(), "Не должно оставаться задач");
     }
 
     @Test
     public void testRemoveNonExistentSubtask() {
-        Epic epic = new Epic(13, TaskType.EPIC, "Эпик имя", "Эпик описание");
-        taskManager.createEpic(epic);
+        Epic epic = taskManager.createEpic(new Epic(13, TaskType.EPIC, "Эпик имя", "Эпик описание"));
         taskManager.deleteSubtask(999);
-        assertEquals(0, epic.getSubtask().size(), "Epic should still have no subtasks");
+        assertEquals(0, epic.getSubtask().size(), "Эпик должен по-прежнему не иметь подзадач");
     }
 }
