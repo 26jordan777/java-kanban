@@ -58,14 +58,14 @@ public class InMemoryTaskManagerTest {
     @Test
     public void testHistoryLimit() {
         for (int i = 0; i < 12; i++) {
-            taskManager.createTask(new Task(i + 6, TaskType.TASK, "Task " + i, Status.NEW, "Description " + i));
+            taskManager.createTask(new Task(i + 1, TaskType.TASK, "Task " + i, Status.NEW, "Description " + i));
         }
 
         for (int i = 0; i < 12; i++) {
-            taskManager.getTask(i + 6);
+            taskManager.getTask(i + 1);
         }
 
         List<Task> history = taskManager.getHistory();
-        Assertions.assertEquals(10, history.size(), "History should contain only the last 10 tasks");
+        Assertions.assertEquals(10, history.size(), "История должна содержать последние 10 задач");
     }
 }
