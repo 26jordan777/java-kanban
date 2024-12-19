@@ -1,25 +1,22 @@
 package com.yandex.tracker.model;
 
 public class Subtask extends Task {
-
     private int epicId;
 
-    public Subtask(int id, String name, String description, int epicId) {
-        super(name, description);
+    public Subtask(int id, TaskType type, String name, Status status, String description, int epicId) {
+        super(id, type, name, status, description);
         this.epicId = epicId;
         setId(id);
-
     }
 
     public int getEpicId() {
         return epicId;
-
     }
 
     @Override
     public String toString() {
-        return "Subtask{" + "id=" + getId() + ", name='" + getName() + '\'' + ", description='" + getDescription() + '\'' + ", status=" + getStatus() + ", epicId=" + epicId + '}';
-
+        return String.format("%d,SUBTASK,%s,%s,%s,%d",
+                getId(), getName(), getStatus(), getDescription(), epicId);
     }
 
 }
