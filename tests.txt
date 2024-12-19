@@ -11,3 +11,4 @@
 ./src/com/yandex/tracker/service/TaskManager.java
 ./src/test/InMemoryHistoryManagerTest.java
 ./src/test/InMemoryTaskManagerTest.java
+./src/test/FileBackedTaskManagerTest.java
