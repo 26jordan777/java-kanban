@@ -10,10 +10,15 @@ public class InMemoryHistoryManager implements HistoryManager {
     private final HashMap<Integer, Node> historyMap = new HashMap<>();
     private Node head;
     private Node tail;
-
+    private final List<Task> history = new ArrayList<>();
 
     @Override
     public void add(Task task) {
+
+        if (!history.contains(task)) {
+            history.add(task);
+        }
+
         if (historyMap.containsKey(task.getId())) {
             removeNode(historyMap.get(task.getId()));
         }
@@ -25,6 +30,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (historyMap.size() > 10) {
             removeNode(head);
         }
+
     }
 
     @Override
@@ -32,13 +38,16 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (historyMap.containsKey(id)) {
             removeNode(historyMap.get(id));
         }
+        history.removeIf(task -> task.getId() == id);
     }
 
     @Override
     public List<Task> getHistory() {
 
-        return getTasks();
+        return new ArrayList<>(history);
     }
+
+
 
     private void linkLast(Node newNode) {
         if (tail == null) {
@@ -77,4 +86,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         return tasks;
     }
+
+
 }

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class InMemoryTaskManagerTest {
+public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     private InMemoryTaskManager taskManager;
 
     @BeforeEach
@@ -67,5 +67,14 @@ public class InMemoryTaskManagerTest {
 
         List<Task> history = taskManager.getHistory();
         Assertions.assertEquals(10, history.size(), "История должна содержать последние 10 задач");
+    }
+    @Override
+    protected InMemoryTaskManager createTaskManager() {
+        return new InMemoryTaskManager();
+    }
+
+    @Test
+    public void testAddTask() {
+
     }
 }

@@ -8,7 +8,7 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileBackedTaskManagerTest {
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @Test
     public void testSaveAndLoad() throws Exception {
@@ -39,5 +39,14 @@ public class FileBackedTaskManagerTest {
         assertEquals(0, loadedManager.getAllTasks().size());
         assertEquals(0, loadedManager.getAllEpics().size());
         assertEquals(0, loadedManager.getAllSubtasks().size());
+    }
+
+    @Override
+    protected FileBackedTaskManager createTaskManager() {
+        return new FileBackedTaskManager(new File("tasks.csv"));
+    }
+
+    @Test
+    public void testSaveAndLoad() {
     }
 }

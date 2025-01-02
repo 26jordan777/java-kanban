@@ -8,6 +8,8 @@ import com.yandex.tracker.model.TaskType;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -21,18 +23,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write("id,type,name,status,description,epic");
+            writer.write("id,type,name,status,description,epic,duration,startTime");
             writer.newLine();
             for (Task task : getAllTasks()) {
-                writer.write(task.toString());
-                writer.newLine();
-            }
-            for (Subtask subtask : getAllSubtasks()) {
-                writer.write(subtask.toString());
-                writer.newLine();
-            }
-            for (Epic epic : getAllEpics()) {
-                writer.write(epic.toString());
+                writer.write(task.toString() + "," + task.getDuration().toMinutes() + "," + (task.getStartTime() != null ? task.getStartTime() : ""));
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -72,14 +66,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         final String name = values[2];
         final Status status = Status.valueOf(values[3]);
         final String description = values[4];
-
+        Duration duration = Duration.ofMinutes(Long.parseLong(values[6]));
+        LocalDateTime startTime = values[7].isEmpty() ? null : LocalDateTime.parse(values[7]);
         if (type == TaskType.TASK) {
-            return new Task(id, type, name, status, description);
+            return new Task(id, type, name, status, description, duration, startTime);
         }
 
         if (type == TaskType.SUBTASK) {
             final int epicId = Integer.parseInt(values[5]);
-            return new Subtask(id, type, name, status, description, epicId);
+            return new Subtask(id, type, name, status, description, epicId,duration,startTime);
         }
 
         return new Epic(id, type, name, status, description);

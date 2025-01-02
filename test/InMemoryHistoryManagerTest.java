@@ -31,4 +31,12 @@ public class InMemoryHistoryManagerTest {
         assertEquals(1, tasks.size(), "History should contain 1 task");
         assertEquals(task, tasks.get(0), "The task in history should be the same as the added task");
     }
+
+    @Test
+    public void testEmptyHistory() {
+    }
+
+    @Test
+    public void testAddTaskToHistory() {
+    }
 }

@@ -4,9 +4,8 @@ import com.yandex.tracker.model.Epic;
 import com.yandex.tracker.model.Subtask;
 import com.yandex.tracker.model.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Task> tasks = new HashMap<>();
@@ -14,6 +13,40 @@ public class InMemoryTaskManager implements TaskManager {
     private HashMap<Integer, Epic> epics = new HashMap<>();
     private final HistoryManager historyManager = Managers.getDefaultHistory();
     private int tasksId = 0;
+    private TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+
+    public void addTask(Task task) {
+        if (hasOverlappingTasks(task)) {
+            throw new IllegalArgumentException("Task overlaps with an existing task.");
+        }
+        prioritizedTasks.add(task);
+    }
+
+    public boolean hasOverlappingTasks(Task newTask) {
+        List<Task> tasks = new ArrayList<>(prioritizedTasks);
+        for (Task existingTask : tasks) {
+            if (isOverlapping(existingTask, newTask)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isOverlapping(Task task1, Task task2) {
+        LocalDateTime start1 = task1.getStartTime();
+        LocalDateTime end1 = task1.getEndTime();
+        LocalDateTime start2 = task2.getStartTime();
+        LocalDateTime end2 = task2.getEndTime();
+
+        return (start1 != null && end1 != null && start2 != null && end2 != null) &&
+                (start1.isBefore(end2) && start2.isBefore(end1));
+    }
+
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks);
+    }
+
+
 
     @Override
     public Task createTask(Task task) {
