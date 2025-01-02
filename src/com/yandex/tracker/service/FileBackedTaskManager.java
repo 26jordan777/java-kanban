@@ -8,11 +8,12 @@ import com.yandex.tracker.model.TaskType;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.util.List;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
+
     private final File file;
 
     public FileBackedTaskManager(File file) {
@@ -25,7 +26,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             writer.write("id,type,name,status,description,epic,duration,startTime");
             writer.newLine();
             for (Task task : getAllTasks()) {
-                writer.write(taskToFileString(task));
+                writer.write(task.toString());
+                writer.newLine();
+            }
+            for (Subtask subtask : getAllSubtasks()) {
+                writer.write(subtask.toString());
+                writer.newLine();
+            }
+            for (Epic epic : getAllEpics()) {
+                writer.write(epic.toString());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -60,11 +69,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static Task taskFromString(String value) {
         final String[] values = value.split(",");
-
-        if (values.length < 6) {
-            throw new IllegalArgumentException("Неправильный формат строки: " + value);
-        }
-
         final int id = Integer.parseInt(values[0]);
         final TaskType type = TaskType.valueOf(values[1]);
         final String name = values[2];

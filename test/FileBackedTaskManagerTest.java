@@ -10,12 +10,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileBackedTaskManagerTest  {
-
-    @Test
-    protected FileBackedTaskManager createTaskManager() {
-        return new FileBackedTaskManager(new File("tasks.csv"));
-    }
+public class FileBackedTaskManagerTest {
 
     @Test
     public void testSaveAndLoad() throws Exception {
@@ -24,20 +19,17 @@ public class FileBackedTaskManagerTest  {
 
         FileBackedTaskManager taskManager = new FileBackedTaskManager(tempFile);
 
-        taskManager.createTask(new Task(1, TaskType.TASK, "Task1", Status.NEW, "Description task1", Duration.ofMinutes(30), LocalDateTime.now()));
-
-
-        taskManager.createEpic(new Epic(2, TaskType.EPIC, "Epic1", Status.NEW, "Description " + "epic1"));
-
-        taskManager.createSubtask(new Subtask(3, TaskType.SUBTASK, "Subtask1", Status.NEW, "Description subtask1", 2, Duration.ofMinutes(20), LocalDateTime.now()));
+        taskManager.createTask(new Task(0, TaskType.TASK, "Task1", Status.NEW, "Description task1",Duration.ofMinutes(30), LocalDateTime.now()));
+        taskManager.createEpic(new Epic(0, TaskType.EPIC, "Epic1", Status.NEW, "Description epic1"));
+        taskManager.createSubtask(new Subtask(1, TaskType.SUBTASK, "Subtask1", Status.NEW, "Description subtask1", 2, Duration.ofMinutes(20), LocalDateTime.now()));
 
         taskManager.save();
 
         FileBackedTaskManager loadedManager = new FileBackedTaskManager(tempFile);
 
-        assertEquals(1, loadedManager.getAllTasks().size(), "Должна быть 1 задача после загрузки");
-        assertEquals(1, loadedManager.getAllEpics().size(), "Должен быть 1 эпик после загрузки");
-        assertEquals(1, loadedManager.getAllSubtasks().size(), "Должна быть 1 подзадача после загрузки");
+        assertEquals(1, loadedManager.getAllTasks().size());
+        assertEquals(1, loadedManager.getAllEpics().size());
+        assertEquals(1, loadedManager.getAllSubtasks().size());
     }
 
     @Test
@@ -46,8 +38,8 @@ public class FileBackedTaskManagerTest  {
         tempFile.deleteOnExit();
 
         FileBackedTaskManager loadedManager = new FileBackedTaskManager(tempFile);
-        assertEquals(0, loadedManager.getAllTasks().size(), "Должно быть 0 задач после загрузки пустого файла");
-        assertEquals(0, loadedManager.getAllEpics().size(), "Должно быть 0 эпиков после загрузки пустого файла");
-        assertEquals(0, loadedManager.getAllSubtasks().size(), "Должно быть 0 подзадач после загрузки пустого файла");
+        assertEquals(0, loadedManager.getAllTasks().size());
+        assertEquals(0, loadedManager.getAllEpics().size());
+        assertEquals(0, loadedManager.getAllSubtasks().size());
     }
 }
