@@ -1,6 +1,6 @@
 package com.yandex.tracker.test;
 
-import com.yandex.tracker.model.*
+import com.yandex.tracker.model.*;
 import com.yandex.tracker.service.FileBackedTaskManager;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +8,7 @@ import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
