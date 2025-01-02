@@ -42,7 +42,6 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
 
         Subtask retrievedSubtask = taskManager.getSubtask(subtask.getId());
         Assertions.assertEquals(subtask, retrievedSubtask);
-        Duration.ofMinutes(20), LocalDateTime.now());
         taskManager.createSubtask(subtask);
     }
 
