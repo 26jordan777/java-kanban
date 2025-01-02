@@ -4,46 +4,34 @@ import com.yandex.tracker.model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final HashMap<Integer, Node> historyMap = new HashMap<>();
     private Node head;
     private Node tail;
-    private final List<Task> history = new ArrayList<>();
+    private final LinkedList<Task> history = new LinkedList<>();
+    private static final int MAX_HISTORY_SIZE = 10;
 
     @Override
     public void add(Task task) {
-
-        if (!history.contains(task)) {
-            history.add(task);
+        if (history.contains(task)) {
+            history.remove(task); // Удаление, чтобы переместить в конец
         }
-
-        if (historyMap.containsKey(task.getId())) {
-            removeNode(historyMap.get(task.getId()));
+        if (history.size() >= MAX_HISTORY_SIZE) {
+            history.removeFirst(); // Удаление самого старого
         }
-
-        Node newNode = new Node(task);
-        linkLast(newNode);
-        historyMap.put(task.getId(), newNode);
-
-        if (historyMap.size() > 10) {
-            removeNode(head);
-        }
-
+        history.add(task);
     }
 
     @Override
     public void remove(int id) {
-        if (historyMap.containsKey(id)) {
-            removeNode(historyMap.get(id));
-        }
         history.removeIf(task -> task.getId() == id);
     }
 
     @Override
     public List<Task> getHistory() {
-
         return new ArrayList<>(history);
     }
 
