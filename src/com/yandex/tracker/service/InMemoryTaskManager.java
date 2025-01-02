@@ -20,6 +20,7 @@ public class InMemoryTaskManager implements TaskManager {
             throw new IllegalArgumentException("Task overlaps with an existing task.");
         }
         prioritizedTasks.add(task);
+
     }
 
     public boolean hasOverlappingTasks(Task newTask) {
