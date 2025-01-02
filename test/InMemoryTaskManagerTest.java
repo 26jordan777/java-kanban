@@ -15,7 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
+public class InMemoryTaskManagerTest  {
     private InMemoryTaskManager taskManager;
 
     @BeforeEach
@@ -86,7 +86,7 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         assertEquals(10, history.size(), "История должна содержать последние 10 задач");
     }
 
-    @Override
+    @Test
     protected InMemoryTaskManager createTaskManager() {
         return new InMemoryTaskManager();
     }
