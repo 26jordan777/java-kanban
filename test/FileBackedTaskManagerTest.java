@@ -1,6 +1,6 @@
 package com.yandex.tracker.test;
 
-import com.yandex.tracker.model.*;
+import com.yandex.tracker.model.*
 import com.yandex.tracker.service.FileBackedTaskManager;
 import org.junit.jupiter.api.Test;
 
@@ -53,3 +53,4 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
         assertEquals(0, loadedManager.getAllEpics().size(), "Должно быть 0 эпиков после загрузки пустого файла");
         assertEquals(0, loadedManager.getAllSubtasks().size(), "Должно быть 0 подзадач после загрузки пустого файла");
     }
+}
