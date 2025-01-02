@@ -90,4 +90,3 @@ public class InMemoryTaskManagerTest  {
     protected InMemoryTaskManager createTaskManager() {
         return new InMemoryTaskManager();
     }
-}
