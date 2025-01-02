@@ -42,3 +42,4 @@ public class InMemoryHistoryManagerTest {
         historyManager.remove(task.getId());
         assertTrue(historyManager.getHistory().isEmpty(), "History should be empty after removing the task");
     }
+}
