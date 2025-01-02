@@ -1,6 +1,6 @@
 package com.yandex.tracker.test;
 
-import com.yandex.tracker.model.*
+import com.yandex.tracker.model.*;
 import com.yandex.tracker.service.FileBackedTaskManager;
 import org.junit.jupiter.api.Test;
 
