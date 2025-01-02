@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import java.util.List;
 
 public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
@@ -39,6 +42,8 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
 
         Subtask retrievedSubtask = taskManager.getSubtask(subtask.getId());
         Assertions.assertEquals(subtask, retrievedSubtask);
+        Duration.ofMinutes(20), LocalDateTime.now());
+        taskManager.createSubtask(subtask);
     }
 
     @Test
@@ -68,13 +73,17 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         List<Task> history = taskManager.getHistory();
         Assertions.assertEquals(10, history.size(), "История должна содержать последние 10 задач");
     }
+
     @Override
     protected InMemoryTaskManager createTaskManager() {
+
         return new InMemoryTaskManager();
     }
 
     @Test
     public void testAddTask() {
-
+        Task task = new Task(1, TaskType.TASK, "Test Task", Status.NEW, "Test Description",
+                Duration.ofMinutes(30), LocalDateTime.now());
+        taskManager.addTask(task);
     }
 }

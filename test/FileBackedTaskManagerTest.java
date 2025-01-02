@@ -3,12 +3,14 @@ package com.yandex.tracker.test;
 import com.yandex.tracker.model.*;
 import com.yandex.tracker.service.FileBackedTaskManager;
 import org.junit.jupiter.api.Test;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
+public class FileBackedTaskManagerTest  {
 
     @Test
     public void testSaveAndLoad() throws Exception {
@@ -46,7 +48,5 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
         return new FileBackedTaskManager(new File("tasks.csv"));
     }
 
-    @Test
-    public void testSaveAndLoad() {
-    }
+
 }
