@@ -1,21 +1,14 @@
 package com.yandex.tracker.test;
 
-import com.yandex.tracker.model.;
+import com.yandex.tracker.model.*
 import com.yandex.tracker.service.FileBackedTaskManager;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FileBackedTaskManagerTest {
-
-    @Test
-    protected FileBackedTaskManager createTaskManager() {
-        return new FileBackedTaskManager(new File("tasks.csv"));
-    }
 
     @Test
     public void testSaveAndLoad() throws Exception {
@@ -24,12 +17,9 @@ public class FileBackedTaskManagerTest {
 
         FileBackedTaskManager taskManager = new FileBackedTaskManager(tempFile);
 
-        taskManager.createTask(new Task(1, TaskType.TASK, "Task1", Status.NEW, "Description task1",
-                Duration.ofMinutes(30), LocalDateTime.now()));
-        taskManager.createEpic(new Epic(2, TaskType.EPIC, "Epic1", Status.NEW, "Description epic1"));
-        taskManager.createSubtask(new Subtask(3, TaskType.SUBTASK, "Subtask1", Status.NEW,
-                "Description subtask1", 2,
-                Duration.ofMinutes(20), LocalDateTime.now()));
+        taskManager.createTask(new Task(0, TaskType.TASK, "Task1", Status.NEW, "Description task1"));
+        taskManager.createEpic(new Epic(0, TaskType.EPIC, "Epic1", Status.NEW, "Description epic1"));
+        taskManager.createSubtask(new Subtask(1, TaskType.SUBTASK, "Subtask1", Status.NEW, "Description subtask1", 0));
 
         taskManager.save();
 
