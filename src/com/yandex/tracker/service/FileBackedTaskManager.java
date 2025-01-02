@@ -89,7 +89,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
 
         if (values.length > 7) {
-            startTime = values[7].isEmpty() ? null : LocalDateTime.parse(values[7]); // startTime
+            startTime = values[7].isEmpty() ? null : LocalDateTime.parse(values[7]);
         }
 
         if (type == TaskType.TASK) {
@@ -102,6 +102,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
 
         return new Epic(id, type, name, status, description);
+    }
+
+    private String taskToFileString(Task task) {
+        return String.format("%d,%s,%s,%s,%s,%s,%d,%s",
+                task.getId(),
+                task.getType(),
+                task.getName(),
+                task.getStatus(),
+                task.getDescription(),
+                (task instanceof Subtask) ? ((Subtask) task).getEpicId() : "",
+                task.getDuration().toMinutes(),
+                task.getStartTime() != null ? task.getStartTime() : "");
     }
 
     @Override
