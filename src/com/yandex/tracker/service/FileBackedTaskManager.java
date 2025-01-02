@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-
     private final File file;
 
     public FileBackedTaskManager(File file) {
@@ -23,18 +22,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write("id,type,name,status,description,epic,duration, startTime");
+            writer.write("id,type,name,status,description,epic,duration,startTime");
             writer.newLine();
             for (Task task : getAllTasks()) {
-                writer.write(task.toString());
-                writer.newLine();
-            }
-            for (Subtask subtask : getAllSubtasks()) {
-                writer.write(taskToFileString(subtask));
-                writer.newLine();
-            }
-            for (Epic epic : getAllEpics()) {
-                writer.write(taskToFileString(epic));
+                writer.write(taskToFileString(task));
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -69,6 +60,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static Task taskFromString(String value) {
         final String[] values = value.split(",");
+
         if (values.length < 6) {
             throw new IllegalArgumentException("Неправильный формат строки: " + value);
         }
@@ -80,7 +72,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         final String description = values[4];
 
         Duration duration = Duration.ofMinutes(Long.parseLong(values[6]));
-
         LocalDateTime startTime = values[7].isEmpty() ? null : LocalDateTime.parse(values[7]);
 
         if (type == TaskType.TASK) {
@@ -96,15 +87,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private String taskToFileString(Task task) {
-        return String.format("%d,%s,%s,%s,%s,%s,%d,%s",
-                task.getId(),
-                task.getType(),
-                task.getName(),
-                task.getStatus(),
-                task.getDescription(),
-                (task instanceof Subtask) ? ((Subtask) task).getEpicId() : "",
-                task.getDuration().toMinutes(),
-                task.getStartTime() != null ? task.getStartTime() : "");
+        return String.format("%d,%s,%s,%s,%s,%s,%d,%s", task.getId(), task.getType(), task.getName(), task.getStatus(), task.getDescription(), (task instanceof Subtask) ? ((Subtask) task).getEpicId() : "", task.getDuration().toMinutes(), task.getStartTime() != null ? task.getStartTime() : "");
     }
 
     @Override
