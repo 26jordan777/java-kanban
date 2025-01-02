@@ -30,11 +30,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 writer.newLine();
             }
             for (Subtask subtask : getAllSubtasks()) {
-                writer.write(subtask.toString());
+                writer.write(taskToFileString(subtask));
                 writer.newLine();
             }
             for (Epic epic : getAllEpics()) {
-                writer.write(epic.toString());
+                writer.write(taskToFileString(epic));
                 writer.newLine();
             }
         } catch (IOException e) {
