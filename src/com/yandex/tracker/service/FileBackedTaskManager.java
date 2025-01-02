@@ -26,9 +26,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             writer.write("id,type,name,status,description,epic,duration,startTime");
             writer.newLine();
             for (Task task : getAllTasks()) {
-                writer.write(task.toString() + "," +
-                        task.getDuration().toMinutes() + "," +
-                        (task.getStartTime() != null ? task.getStartTime() : ""));
+                writer.write(task.toString());
+                writer.newLine();
+            }
+            for (Subtask subtask : getAllSubtasks()) {
+                writer.write(subtask.toString());
+                writer.newLine();
+            }
+            for (Epic epic : getAllEpics()) {
+                writer.write(epic.toString());
                 writer.newLine();
             }
         } catch (IOException e) {
