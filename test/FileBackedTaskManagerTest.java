@@ -8,11 +8,11 @@ import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*
 
-public class FileBackedTaskManagerTest  {
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
-    @Test
+    @Override
     protected FileBackedTaskManager createTaskManager() {
         return new FileBackedTaskManager(new File("tasks.csv"));
     }
@@ -24,21 +24,17 @@ public class FileBackedTaskManagerTest  {
 
         FileBackedTaskManager taskManager = new FileBackedTaskManager(tempFile);
 
-
         taskManager.createTask(new Task(1, TaskType.TASK, "Task1", Status.NEW, "Description task1",
                 Duration.ofMinutes(30), LocalDateTime.now()));
 
-
         Epic epic = new Epic(2, TaskType.EPIC, "Epic1", Status.NEW, "Description epic1");
         taskManager.createEpic(epic);
-
 
         taskManager.createSubtask(new Subtask(3, TaskType.SUBTASK, "Subtask1", Status.NEW,
                 "Description subtask1", epic.getId(),
                 Duration.ofMinutes(20), LocalDateTime.now()));
 
         taskManager.save();
-
 
         FileBackedTaskManager loadedManager = new FileBackedTaskManager(tempFile);
 
@@ -57,4 +53,3 @@ public class FileBackedTaskManagerTest  {
         assertEquals(0, loadedManager.getAllEpics().size(), "Должно быть 0 эпиков после загрузки пустого файла");
         assertEquals(0, loadedManager.getAllSubtasks().size(), "Должно быть 0 подзадач после загрузки пустого файла");
     }
-}
