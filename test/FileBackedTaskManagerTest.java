@@ -24,14 +24,12 @@ public class FileBackedTaskManagerTest  {
 
         FileBackedTaskManager taskManager = new FileBackedTaskManager(tempFile);
 
-        taskManager.createTask(new Task(1, TaskType.TASK, "Task1", Status.NEW, "Description task1",
+        taskManager.createTask(new Task(0, TaskType.TASK, "Task1", Status.NEW, "Description task1",
                 Duration.ofMinutes(30), LocalDateTime.now()));
 
-        Epic epic = new Epic(2, TaskType.EPIC, "Epic1", Status.NEW, "Description epic1");
-        taskManager.createEpic(epic);
-
-        taskManager.createSubtask(new Subtask(3, TaskType.SUBTASK, "Subtask1", Status.NEW,
-                "Description subtask1", epic.getId(),
+        taskManager.createEpic(new Epic(0, TaskType.EPIC, "Epic1", Status.NEW, "Description epic1"));
+        taskManager.createSubtask(new Subtask(1, TaskType.SUBTASK, "Subtask1", Status.NEW,
+                "Description subtask1", 0,
                 Duration.ofMinutes(20), LocalDateTime.now()));
 
         taskManager.save();
