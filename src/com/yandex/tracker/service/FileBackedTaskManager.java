@@ -69,23 +69,39 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static Task taskFromString(String value) {
         final String[] values = value.split(",");
+        if (values.length < 6) {
+            throw new IllegalArgumentException("Неправильный формат строки: " + value);
+        }
+
         final int id = Integer.parseInt(values[0]);
         final TaskType type = TaskType.valueOf(values[1]);
         final String name = values[2];
         final Status status = Status.valueOf(values[3]);
         final String description = values[4];
-        Duration duration = Duration.ofMinutes(Long.parseLong(values[6]));
-        LocalDateTime startTime = values[7].isEmpty() ? null : LocalDateTime.parse(values[7]);
+
+        Duration duration;
+        LocalDateTime startTime = null;
+
+        if (values.length > 6) {
+            duration = Duration.ofMinutes(Long.parseLong(values[6]));
+        } else {
+            duration = Duration.ZERO;
+        }
+
+        if (values.length > 7) {
+            startTime = values[7].isEmpty() ? null : LocalDateTime.parse(values[7]); // startTime
+        }
+
         if (type == TaskType.TASK) {
             return new Task(id, type, name, status, description, duration, startTime);
         }
 
         if (type == TaskType.SUBTASK) {
             final int epicId = Integer.parseInt(values[5]);
-            return new Subtask(id, type, name, status, description, epicId,duration,startTime);
+            return new Subtask(id, type, name, status, description, epicId, duration, startTime);
         }
 
-        return new Epic(id, type, name, status, description);
+        return new Epic(id, type, name, status, description); 
     }
 
     @Override
