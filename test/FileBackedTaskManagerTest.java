@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileBackedTaskManagerTest extends TaskManagerTest {
+public class FileBackedTaskManagerTest  {
 
     @Test
     protected FileBackedTaskManager createTaskManager() {
