@@ -9,6 +9,8 @@ import com.yandex.tracker.model.TaskType;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -21,7 +23,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write("id,type,name,status,description,epic");
+            writer.write("id,type,name,status,description,epic,duration,startTime");
             writer.newLine();
             for (Task task : getAllTasks()) {
                 writer.write(task.toString());
@@ -71,18 +73,33 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         final TaskType type = TaskType.valueOf(values[1]);
         final String name = values[2];
         final Status status = Status.valueOf(values[3]);
-        final String description = values[4];
+        final String description = null;
+
+        Duration duration = Duration.ZERO;
+        LocalDateTime startTime = null;
+
+        if (values.length > 6) {
+            duration = Duration.ofMinutes(Long.parseLong(values[6]));
+        }
+
+        if (values.length > 7) {
+            startTime = values[7].isEmpty() ? null : LocalDateTime.parse(values[7]);
+        }
 
         if (type == TaskType.TASK) {
-            return new Task(id, type, name, status, description);
+            return new Task(id, type, name, status, description, duration, startTime);
         }
 
         if (type == TaskType.SUBTASK) {
             final int epicId = Integer.parseInt(values[5]);
-            return new Subtask(id, type, name, status, description, epicId);
+            return new Subtask(id, type, name, status, description, epicId, duration, startTime);
         }
 
         return new Epic(id, type, name, status, description);
+    }
+
+    private String taskToFileString(Task task) {
+        return String.format("%d,%s,%s,%s,%s,%s,%d,%s", task.getId(), task.getType(), task.getName(), task.getStatus(), task.getDescription(), (task instanceof Subtask) ? ((Subtask) task).getEpicId() : "", task.getDuration().toMinutes(), task.getStartTime() != null ? task.getStartTime() : "");
     }
 
     @Override
