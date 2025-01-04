@@ -21,7 +21,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         loadFromFile();
     }
 
-    private void save() {
+    public void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write("id,type,name,status,description,epic,duration,startTime");
             writer.newLine();
@@ -42,7 +42,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    private void loadFromFile() {
+    public void loadFromFile() {
         if (!file.exists()) {
             return;
         }
@@ -67,7 +67,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    private static Task taskFromString(String value) {
+    public static Task taskFromString(String value) {
         final String[] values = value.split(",");
         final int id = Integer.parseInt(values[0]);
         final TaskType type = TaskType.valueOf(values[1]);
@@ -98,7 +98,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return new Epic(id, type, name, status, description);
     }
 
-    private String taskToFileString(Task task) {
+    public String taskToFileString(Task task) {
         return String.format("%d,%s,%s,%s,%s,%s,%d,%s", task.getId(), task.getType(), task.getName(), task.getStatus(), task.getDescription(), (task instanceof Subtask) ? ((Subtask) task).getEpicId() : "", task.getDuration().toMinutes(), task.getStartTime() != null ? task.getStartTime() : "");
     }
 

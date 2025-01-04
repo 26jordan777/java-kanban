@@ -17,10 +17,10 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void add(Task task) {
         if (history.contains(task)) {
-            history.remove(task); // Удаление, чтобы переместить в конец
+            history.remove(task);
         }
         if (history.size() >= MAX_HISTORY_SIZE) {
-            history.removeFirst(); // Удаление самого старого
+            history.removeFirst();
         }
         history.add(task);
     }
