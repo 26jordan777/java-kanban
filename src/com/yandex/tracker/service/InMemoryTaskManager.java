@@ -8,22 +8,25 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private HashMap<Integer, Task> tasks = new HashMap<>();
-    private HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private HashMap<Integer, Epic> epics = new HashMap<>();
+    private Map<Integer, Task> tasks = new HashMap<>();
+    private Map<Integer, Subtask> subtasks = new HashMap<>();
+    private Map<Integer, Epic> epics = new HashMap<>();
     private final HistoryManager historyManager = Managers.getDefaultHistory();
     private int tasksId = 0;
-    private TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    private Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime,Comparator.nullsLast(Comparator.naturalOrder()))
+            .thenComparing(Task::getId));
 
-    public void addTask(Task task) {
+    private void addTask(Task task) {
         if (hasOverlappingTasks(task)) {
             throw new IllegalArgumentException("Task overlaps with an existing task.");
         }
+        tasks.put(task.getId(), task);
         prioritizedTasks.add(task);
 
     }
 
-    public boolean hasOverlappingTasks(Task newTask) {
+
+    private boolean hasOverlappingTasks(Task newTask) {
         List<Task> tasks = new ArrayList<>(prioritizedTasks);
         for (Task existingTask : tasks) {
             if (isOverlapping(existingTask, newTask)) {
@@ -33,7 +36,7 @@ public class InMemoryTaskManager implements TaskManager {
         return false;
     }
 
-    public boolean isOverlapping(Task task1, Task task2) {
+    private boolean isOverlapping(Task task1, Task task2) {
         LocalDateTime start1 = task1.getStartTime();
         LocalDateTime end1 = task1.getEndTime();
         LocalDateTime start2 = task2.getStartTime();
@@ -52,7 +55,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task createTask(Task task) {
         task.setId(tasksId++);
-        tasks.put(task.getId(), task);
+        addTask(task);
         return task;
     }
 
@@ -65,6 +68,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.addSubtask(subtask);
             epic.updateStatus();
         }
+        prioritizedTasks.add(subtask);
         return subtask;
     }
 
@@ -72,17 +76,22 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic createEpic(Epic epic) {
         epic.setId(tasksId++);
         epics.put(epic.getId(), epic);
+        prioritizedTasks.add(epic);
         return epic;
     }
 
 
     @Override
     public void updateTask(Task newTask) {
+        prioritizedTasks.remove(newTask);
         tasks.put(newTask.getId(), newTask);
+        prioritizedTasks.add(newTask);
     }
 
     @Override
     public void updateSubtask(Subtask newSubtask) {
+        prioritizedTasks.remove(newSubtask);
+        subtasks.put(newSubtask.getId(), newSubtask);
         Epic epic = epics.get(newSubtask.getEpicId());
         if (epic != null) {
             subtasks.put(newSubtask.getId(), newSubtask);
@@ -90,17 +99,21 @@ public class InMemoryTaskManager implements TaskManager {
             epic.addSubtask(newSubtask);
             epic.updateStatus();
         }
+        prioritizedTasks.add(newSubtask);
     }
 
     @Override
     public void updateEpic(Epic newEpic) {
+        prioritizedTasks.remove(newEpic);
         epics.put(newEpic.getId(), newEpic);
+        prioritizedTasks.add(newEpic);
     }
 
     @Override
     public void deletedTask(int id) {
         Task task = tasks.remove(id);
         if (task != null) {
+            prioritizedTasks.remove(task);
             historyManager.remove(id);
         }
     }
@@ -114,6 +127,7 @@ public class InMemoryTaskManager implements TaskManager {
                 epic.getSubtask().remove(subtask);
                 epic.updateStatus();
             }
+            prioritizedTasks.remove(subtask);
         }
     }
 
@@ -123,6 +137,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic != null) {
             for (Subtask subtask : epic.getSubtask()) {
                 subtasks.remove(subtask.getId());
+                prioritizedTasks.remove(subtask);
                 historyManager.remove(subtask.getId());
             }
             historyManager.remove(id);
