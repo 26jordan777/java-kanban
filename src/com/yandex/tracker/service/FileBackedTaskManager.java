@@ -52,7 +52,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             if (lines.size() <= 1) {
                 return;
             }
-            for (String line : lines.subList(1, lines.size())) {
+            for (String line : lines.subList(3, lines.size())) {
                 Task task = taskFromString(line);
                 if (task instanceof Subtask) {
                     createSubtask((Subtask) task);
