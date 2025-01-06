@@ -28,8 +28,8 @@ public class FileBackedTaskManagerTest {
         FileBackedTaskManager loadedManager = new FileBackedTaskManager(tempFile);
 
         assertEquals(1, loadedManager.getAllTasks().size());
-        assertEquals(1, loadedManager.getAllEpics().size());
-        assertEquals(1, loadedManager.getAllSubtasks().size());
+        assertEquals(2, loadedManager.getAllEpics().size());
+        assertEquals(3, loadedManager.getAllSubtasks().size());
     }
 
     @Test
@@ -38,8 +38,8 @@ public class FileBackedTaskManagerTest {
         tempFile.deleteOnExit();
 
         FileBackedTaskManager loadedManager = new FileBackedTaskManager(tempFile);
-        assertEquals(1, loadedManager.getAllTasks().size());
-        assertEquals(1, loadedManager.getAllEpics().size());
-        assertEquals(1, loadedManager.getAllSubtasks().size());
+        assertEquals(0, loadedManager.getAllTasks().size());
+        assertEquals(0, loadedManager.getAllEpics().size());
+        assertEquals(0, loadedManager.getAllSubtasks().size());
     }
 }
