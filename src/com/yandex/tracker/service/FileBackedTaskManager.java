@@ -73,7 +73,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         final TaskType type = TaskType.valueOf(values[1]);
         final String name = values[2];
         final Status status = Status.valueOf(values[3]);
-        final String description = null;
+        final String description = values[4];
 
         Duration duration = Duration.ZERO;
         LocalDateTime startTime = null;

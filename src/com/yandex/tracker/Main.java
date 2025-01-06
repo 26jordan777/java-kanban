@@ -19,8 +19,8 @@ public class Main {
 
         Epic epic1 = taskManager.createEpic(new Epic(3, TaskType.EPIC, "Поступление в университет", Status.NEW, "Подготовиться к поступлению"));
 
-        Subtask subtask1 = taskManager.createSubtask(new Subtask(4, TaskType.SUBTASK, "Собрать все необходимые документы", Status.NEW, "Собрать все документы в папку", epic1.getId(),Duration.ofMinutes(30), LocalDateTime.now()));
-        Subtask subtask2 = taskManager.createSubtask(new Subtask(5, TaskType.SUBTASK, "Проверить документы", Status.NEW, "Убедиться в их корректности", epic1.getId(),Duration.ofMinutes(30),LocalDateTime.now().plusMinutes(10)));
+        Subtask subtask1 = taskManager.createSubtask(new Subtask(4, TaskType.SUBTASK, "Собрать все необходимые документы", Status.NEW, "Собрать все документы в папку", epic1.getId(),Duration.ofMinutes(30), LocalDateTime.now().plusHours(5)));
+        Subtask subtask2 = taskManager.createSubtask(new Subtask(5, TaskType.SUBTASK, "Проверить документы", Status.NEW, "Убедиться в их корректности", epic1.getId(),Duration.ofMinutes(30),LocalDateTime.now().plusMinutes(80)));
 
         Epic epic2 = taskManager.createEpic(new Epic(6, TaskType.EPIC, "Найти работу", Status.NEW, "Начать поиск новой работы"));
         Subtask subtask3 = taskManager.createSubtask(new Subtask(7, TaskType.SUBTASK, "Обновить резюме", Status.NEW, "Добавить новую информацию в резюме", epic2.getId(),Duration.ofMinutes(60),LocalDateTime.now().plusHours(2)));

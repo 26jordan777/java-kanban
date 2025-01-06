@@ -60,6 +60,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask createSubtask(Subtask subtask) {
         subtask.setId(tasksId++);
+        if (hasOverlappingTasks(subtask)) {
+            throw new IllegalArgumentException("Subtask overlaps with an existing task.");
+        }
         subtasks.put(subtask.getId(), subtask);
         Epic epic = epics.get(subtask.getEpicId());
         if (epic != null) {
