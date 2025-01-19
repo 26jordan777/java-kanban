@@ -25,6 +25,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
                 sendText(exchange, "Method Not Allowed");
         }
     }
+
     private void handleGetTasks(HttpExchange exchange) throws IOException {
         List<Task> tasks = HttpTaskServer.taskManager.getAllTasks();
         String jsonResponse = HttpTaskServer.gson.toJson(tasks);
