@@ -30,7 +30,7 @@ public class HttpTaskManagerTasksTest {
 
     public HttpTaskManagerTasksTest() throws IOException {
         manager = new InMemoryTaskManager();
-        taskServer = new HttpTaskServer();
+        taskServer = new HttpTaskServer(manager);
         gson = new Gson();
     }
 
