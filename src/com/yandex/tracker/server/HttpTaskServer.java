@@ -8,15 +8,22 @@ import com.yandex.tracker.service.TaskManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.time.Duration;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
-    public static final TaskManager taskManager = Managers.getDefault();
-    public static final Gson gson = new GsonBuilder().create();
+    public static  TaskManager taskManager = Managers.getDefault();
+    public static  Gson gson = new GsonBuilder().create();
     private HttpServer server;
 
+    public HttpTaskServer(TaskManager manager) {
+        taskManager = manager;
+        gson = new GsonBuilder()
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
+    }
     public static void main(String[] args) {
-        HttpTaskServer httpTaskServer = new HttpTaskServer();
+        HttpTaskServer httpTaskServer = new HttpTaskServer(Managers.getDefault());
         httpTaskServer.start();
     }
 
