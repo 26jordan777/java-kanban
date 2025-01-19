@@ -1,19 +1,25 @@
 package com.yandex.tracker.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Task {
-    private int id;
-    private String name;
-    private String description;
-    private Status status;
-    private TaskType type;
+    protected int id;
+    protected String name;
+    protected String description;
+    protected Status status;
+    protected TaskType type;
+    protected Duration duration;
+    protected LocalDateTime startTime;
 
-
-    public Task(int id, TaskType type, String name, Status status, String description) {
+    public Task(int id, TaskType type, String name, Status status, String description, Duration duration, LocalDateTime startTime) {
         this.id = id;
         this.type = type;
         this.name = name;
         this.description = description;
         this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
 
@@ -57,4 +63,25 @@ public class Task {
     public String toString() {
         return String.format("%d,TASK,%s,%s,%s,", id, name, status, description);
     }
+
+    public LocalDateTime getEndTime() {
+        return startTime != null ? startTime.plus(duration) : null;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
 }
