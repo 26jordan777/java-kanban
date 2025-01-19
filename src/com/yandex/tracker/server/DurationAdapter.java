@@ -19,4 +19,20 @@ public class DurationAdapter implements JsonSerializer<Duration>, JsonDeserializ
         long seconds = json.getAsLong();
         return Duration.ofSeconds(seconds);
     }
+
+    public class MyDuration {
+        private long seconds;
+
+        public MyDuration(long seconds) {
+            this.seconds = seconds;
+        }
+
+        public Duration toDuration() {
+            return Duration.ofSeconds(seconds);
+        }
+
+        public MyDuration fromDuration(Duration duration) {
+            return new MyDuration(duration.getSeconds());
+        }
+    }
 }
