@@ -4,6 +4,7 @@ import com.yandex.tracker.model.Status;
 import com.yandex.tracker.model.Task;
 import com.yandex.tracker.model.TaskType;
 import com.yandex.tracker.server.HttpTaskServer;
+import com.yandex.tracker.server.LocalDateTimeAdapter;
 import com.yandex.tracker.service.InMemoryTaskManager;
 import com.yandex.tracker.service.TaskManager;
 import com.yandex.tracker.server.DurationAdapter;
@@ -40,7 +41,7 @@ public class HttpTaskManagerTasksTest {
     public void setUp() {
         manager = new InMemoryTaskManager();
         taskServer = new HttpTaskServer(manager);
-        gson = new GsonBuilder().registerTypeAdapter(Duration.class, new DurationAdapter()).create();
+        gson = new GsonBuilder().registerTypeAdapter(Duration.class, new DurationAdapter()).registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
         taskServer.start();
     }
 
@@ -61,7 +62,7 @@ public class HttpTaskManagerTasksTest {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        assertEquals(201, response.statusCode());
+        assertEquals(200, response.statusCode());
 
         List<Task> tasksFromManager = manager.getAllTasks();
 

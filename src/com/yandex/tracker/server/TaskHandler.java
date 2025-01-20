@@ -6,6 +6,7 @@ import com.yandex.tracker.model.Task;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.util.List;
 
 public class TaskHandler extends BaseHttpHandler implements HttpHandler {
@@ -33,15 +34,21 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
     }
 
     private void handleCreateTask(HttpExchange exchange) throws IOException {
-        Task task = HttpTaskServer.gson.fromJson(new InputStreamReader(exchange.getRequestBody()), Task.class);
-        HttpTaskServer.taskManager.createTask(task);
-        sendText(exchange, "{\"message\":\"Task created successfully\"}");
+        try {
+            Task task = HttpTaskServer.gson.fromJson(new InputStreamReader(exchange.getRequestBody()), Task.class);
+            HttpTaskServer.taskManager.createTask(task);
+            sendText(exchange, "{\"message\":\"Task created successfully\"}");
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_CREATED, -1);
+        } catch (Exception e) {
+            sendInternalServerError(exchange, e.getMessage());
+        }
     }
 
     private void handleDeleteTask(HttpExchange exchange) throws IOException {
         String query = exchange.getRequestURI().getQuery();
         if (query != null && query.startsWith("id=")) {
-            int id = Integer.parseInt(query.split("=")[1]); HttpTaskServer.taskManager.deletedTask(id);
+            int id = Integer.parseInt(query.split("=")[1]);
+            HttpTaskServer.taskManager.deletedTask(id);
             sendText(exchange, "{\"message\":\"Task deleted successfully\"}");
         } else {
             sendNotFound(exchange);
