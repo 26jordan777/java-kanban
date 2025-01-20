@@ -14,8 +14,7 @@ public class DurationAdapter extends TypeAdapter<Duration> {
         if (duration == null || duration.isZero()) {
             jsonWriter.nullValue();
         } else {
-            long durationInMinutes = duration.toMinutes();
-            jsonWriter.value(durationInMinutes);
+            jsonWriter.value(duration.getSeconds());
         }
     }
 
@@ -25,8 +24,8 @@ public class DurationAdapter extends TypeAdapter<Duration> {
             jsonReader.nextNull();
             return null;
         }
-        long minutes = jsonReader.nextLong();
-        return Duration.ofMinutes(minutes);
+        long seconds = jsonReader.nextLong();
+        return Duration.ofMinutes(seconds);
     }
 
     public class MyDuration {
