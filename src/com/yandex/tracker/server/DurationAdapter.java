@@ -1,23 +1,32 @@
 package com.yandex.tracker.server;
 
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
+import com.google.gson.TypeAdapter;
 
-import com.google.gson.JsonSerializer;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
-import java.lang.reflect.Type;
+import java.io.IOException;
 import java.time.Duration;
 
-public class DurationAdapter implements JsonSerializer<Duration>, JsonDeserializer<Duration> {
+public class DurationAdapter extends TypeAdapter<Duration> {
     @Override
-    public JsonElement serialize(Duration duration, Type typeOfSrc, com.google.gson.JsonSerializationContext context) {
-        return context.serialize(duration.getSeconds());
+    public void write(JsonWriter jsonWriter, Duration duration) throws IOException {
+        if (duration == null || duration.isZero()) {
+            jsonWriter.nullValue();
+        } else {
+            long durationInMinutes = duration.toMinutes();
+            jsonWriter.value(durationInMinutes);
+        }
     }
 
     @Override
-    public Duration deserialize(JsonElement json, Type typeOfT, com.google.gson.JsonDeserializationContext context) {
-        long seconds = json.getAsLong();
-        return Duration.ofSeconds(seconds);
+    public Duration read(JsonReader jsonReader) throws IOException {
+        if (jsonReader.peek() == com.google.gson.stream.JsonToken.NULL) {
+            jsonReader.nextNull();
+            return null;
+        }
+        long minutes = jsonReader.nextLong();
+        return Duration.ofMinutes(minutes);
     }
 
     public class MyDuration {

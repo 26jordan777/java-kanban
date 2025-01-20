@@ -18,7 +18,9 @@ public class HttpTaskServer {
 
     public HttpTaskServer(TaskManager manager) {
         taskManager = manager;
-        gson = new GsonBuilder().registerTypeAdapter(Duration.class, new DurationAdapter()).create();
+        gson = new GsonBuilder()
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
     }
 
     public static void main(String[] args) {
@@ -39,7 +41,6 @@ public class HttpTaskServer {
 
             server.setExecutor(null);
             server.start();
-            server.stop(0);
         } catch (IOException e) {
             e.printStackTrace();
         }
