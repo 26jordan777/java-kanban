@@ -10,6 +10,8 @@ import com.google.gson.Gson;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import com.google.gson.GsonBuilder;
+import com.yandex.tracker.server.DurationAdapter;
 
 import java.io.IOException;
 import java.net.URI;
@@ -29,8 +31,7 @@ public class HttpTaskManagerTasksTest {
     Gson gson;
 
     public HttpTaskManagerTasksTest() throws IOException {
-        new GsonBuilder().registerTypeAdapter(Duration.class, new DurationAdapter())
-                .create();
+        new GsonBuilder().registerTypeAdapter(Duration.class, new DurationAdapter()).create();
     }
 
 
@@ -38,8 +39,7 @@ public class HttpTaskManagerTasksTest {
     public void setUp() {
         manager = new InMemoryTaskManager();
         taskServer = new HttpTaskServer(manager);
-        gson = new Gson();
-        taskServer.start();
+        gson = new GsonBuilder().registerTypeAdapter(Duration.class, new DurationAdapter()).create().taskServer.start();
     }
 
     @AfterEach
