@@ -2,6 +2,7 @@ package com.yandex.tracker.server;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
@@ -13,18 +14,17 @@ public class DurationAdapter extends TypeAdapter<Duration> {
         if (duration == null || duration.isZero()) {
             jsonWriter.nullValue();
         } else {
-            long durationInMinutes = duration.toMinutes();
-            jsonWriter.value(durationInMinutes);
+            int durationOfMin = (int) duration.toMinutes();
+            jsonWriter.value(durationOfMin);
         }
     }
 
     @Override
     public Duration read(JsonReader jsonReader) throws IOException {
-        if (jsonReader.peek() == com.google.gson.stream.JsonToken.NULL) {
+        if (jsonReader.peek() == JsonToken.NULL) {
             jsonReader.nextNull();
             return null;
         }
-        long minutes = jsonReader.nextLong();
-        return Duration.ofMinutes(minutes);
+        return Duration.ofMinutes(jsonReader.nextInt());
     }
 }
