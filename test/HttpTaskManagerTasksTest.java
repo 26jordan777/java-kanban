@@ -6,6 +6,7 @@ import com.yandex.tracker.model.TaskType;
 import com.yandex.tracker.server.HttpTaskServer;
 import com.yandex.tracker.service.InMemoryTaskManager;
 import com.yandex.tracker.service.TaskManager;
+import com.yandex.tracker.server.DurationAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -26,9 +27,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpTaskManagerTasksTest {
 
-   private TaskManager manager;
-   private  HttpTaskServer taskServer;
-   private Gson gson;
+    TaskManager manager;
+    HttpTaskServer taskServer;
+    Gson gson;
 
     public HttpTaskManagerTasksTest() {
 
