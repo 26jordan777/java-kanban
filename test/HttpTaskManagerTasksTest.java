@@ -29,9 +29,8 @@ public class HttpTaskManagerTasksTest {
     Gson gson;
 
     public HttpTaskManagerTasksTest() throws IOException {
-        manager = new InMemoryTaskManager();
-        taskServer = new HttpTaskServer(manager);
-        gson = new Gson();
+        new GsonBuilder().registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
     }
 
 
