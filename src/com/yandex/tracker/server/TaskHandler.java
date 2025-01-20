@@ -41,8 +41,7 @@ public class TaskHandler extends BaseHttpHandler implements HttpHandler {
     private void handleDeleteTask(HttpExchange exchange) throws IOException {
         String query = exchange.getRequestURI().getQuery();
         if (query != null && query.startsWith("id=")) {
-            int id = Integer.parseInt(query.split("=")[1]);
-            HttpTaskServer.taskManager.deletedTask(id);
+            int id = Integer.parseInt(query.split("=")[1]); HttpTaskServer.taskManager.deletedTask(id);
             sendText(exchange, "{\"message\":\"Task deleted successfully\"}");
         } else {
             sendNotFound(exchange);

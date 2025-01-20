@@ -1,6 +1,7 @@
 package com.yandex.tracker.server;
 
 import com.sun.net.httpserver.HttpServer;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.yandex.tracker.service.Managers;
@@ -12,14 +13,13 @@ import java.time.Duration;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
-    public static TaskManager taskManager = Managers.getDefault();
-    public static Gson gson = new GsonBuilder().create();
+    public static TaskManager taskManager;
+    public static Gson gson;
     private HttpServer server;
 
     public HttpTaskServer(TaskManager manager) {
         taskManager = manager;
-        gson = new GsonBuilder()
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
+        gson = new GsonBuilder().registerTypeAdapter(Duration.class, new DurationAdapter())
                 .create();
     }
 

@@ -4,8 +4,8 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import java.net.HttpURLConnection;
 
 public abstract class BaseHttpHandler {
     protected void sendText(HttpExchange h, String text) throws IOException {
@@ -18,7 +18,7 @@ public abstract class BaseHttpHandler {
     }
 
     protected void sendNotFound(HttpExchange h) throws IOException {
-        sendText(h, "{\"error\":\"Not Found\"}");
+        sendText(h, "{\"error\":\"Resource Not Found\"}");
         h.sendResponseHeaders(HttpURLConnection.HTTP_NOT_FOUND, -1);
     }
 
