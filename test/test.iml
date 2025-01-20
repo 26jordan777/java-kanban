@@ -13,5 +13,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" exported="" name="m1-t25-api" level="project" />
   </component>
 </module>
